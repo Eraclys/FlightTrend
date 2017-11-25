@@ -1,4 +1,8 @@
-﻿using FlightTrend.Core.FlightFinders;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using FlightTrend.Core.Extensions;
+using FlightTrend.Core.FlightFinders;
 using FlightTrend.Core.Models;
 using FlightTrend.Core.Specifications;
 using FlightTrend.PegasusAirlines;
@@ -17,42 +21,58 @@ namespace FlightTrend.Console
 
             var priceFinder = CreatePriceFinder();
 
-            var cheapestPrice = priceFinder.FindCheapestReturnFlight(FindCheapestReturnFlightCriteriaBuilder.New()
+            var returnFlights = priceFinder.FindCheapestReturnFlightsForMultipleTravelDates(FindCheapestReturnFlightsForMultipleTravelDatesCriteriaBuilder.New()
                 .From("STN")
                 .To("SAW")
-                .Leaving(NextFriday)
-                .Returning(OnFollowingSunday)
                 .FilterDepartureWith(departureFlightSpecification)
                 .FilterReturnWith(returnFlightSpecification)
+                .TravellingDates(EveryWeekendForTheNextYear().ToArray())
                 .Build()).Result;
 
-            DisplayCheapestPrices(cheapestPrice);
+            DisplayHeaders();
+            returnFlights.ForEach(DisplayReturnFlight);
 
             System.Console.Read();
         }
 
-        private static void DisplayCheapestPrices([CanBeNull] ReturnFlight price)
+        private static void DisplayHeaders()
         {
+            System.Console.WriteLine($"{"", 10}|{"DepDate", 10}|{"DepTime",10}|{"ArrDate",10}|{"ArrTime",10}|{"Price",10}");
+        }
 
-            if (price == null)
+        [ItemNotNull]
+        private static IEnumerable<ReturnFlightDates> EveryWeekendForTheNextYear()
+        {
+            var startDate = SystemClock.Instance.GetCurrentInstant().InUtc().Date;
+
+            for (var i = 0; i < 52; i++)
+            {
+                var friday = startDate.Next(IsoDayOfWeek.Friday);
+                var sunday = friday.Next(IsoDayOfWeek.Sunday);
+
+                yield return new ReturnFlightDates(friday, sunday);
+
+                startDate = sunday;
+            }
+        }
+
+        private static void DisplayReturnFlight([CanBeNull] ReturnFlight returnFlight)
+        {
+            if (returnFlight == null)
             {
                 System.Console.WriteLine("No flights found matching criteria");
             }
             else
             {
-                System.Console.WriteLine("Departure:");
-                DisplayPrice(price.Departure);
-
-                System.Console.WriteLine("Return:");
-                DisplayPrice(price.Return);
-
-                System.Console.WriteLine($"Total Cost: {price.TotalPrice} GBP");
+                DisplayPrice("Departure", returnFlight.Departure);
+                DisplayPrice("Return", returnFlight.Return);
+                System.Console.WriteLine($"{"Total",10}|{returnFlight.TotalPrice,50}");
             }
         }
 
-        private static void DisplayPrice(Flight price)
+        private static void DisplayPrice(string label, [NotNull] Flight price)
         {
-            System.Console.WriteLine($"dep={price.DepartureDate} {price.DepartureTime} arr={price.ArrivalDate} {price.ArrivalTime} => {price.Price}");
+            System.Console.WriteLine($"{label,10}|{price.DepartureDate.ToString("ddd MMM yy", CultureInfo.InvariantCulture),10}|{price.DepartureTime,10}|{price.ArrivalDate.ToString("ddd MMM yy", CultureInfo.InvariantCulture),10}|{price.ArrivalTime,10}|{price.Price,10}");
         }
 
         [NotNull]
@@ -60,8 +80,5 @@ namespace FlightTrend.Console
         {
             return new PegasusCheapestFlightFinder();
         }
-
-        private static LocalDate NextFriday => SystemClock.Instance.GetCurrentInstant().InUtc().Date.Next(IsoDayOfWeek.Friday);
-        private static LocalDate OnFollowingSunday => NextFriday.Next(IsoDayOfWeek.Sunday);
     }
 }

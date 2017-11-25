@@ -14,6 +14,11 @@ namespace FlightTrend.Core.FlightFinders
         private ISpecification<Flight> _departureFlightsFilter;
         private ISpecification<Flight> _returnFlightsFilter;
 
+        private FindCheapestReturnFlightCriteriaBuilder()
+        {
+
+        }
+
         [NotNull]
         public static FindCheapestReturnFlightCriteriaBuilder New()
         {
