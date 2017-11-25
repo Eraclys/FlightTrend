@@ -1,8 +1,9 @@
-﻿using NodaTime;
+﻿using FlightTrend.Core.Models;
+using NodaTime;
 
 namespace FlightTrend.Core.Specifications
 {
-    public sealed class ArrivalTimeIsBefore : ISpecification<FlightPrice>
+    public sealed class ArrivalTimeIsBefore : ISpecification<Flight>
     {
         private readonly LocalTime _localTime;
 
@@ -11,7 +12,7 @@ namespace FlightTrend.Core.Specifications
             _localTime = localTime;
         }
 
-        public bool IsSatisfiedBy(FlightPrice value)
+        public bool IsSatisfiedBy(Flight value)
         {
             return value.DepartureTime < _localTime;
         }

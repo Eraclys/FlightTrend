@@ -1,6 +1,5 @@
-﻿using System;
-using System.Linq;
-using FlightTrend.Core;
+﻿using FlightTrend.Core.FlightFinders;
+using FlightTrend.Core.Models;
 using FlightTrend.Core.Specifications;
 using FlightTrend.PegasusAirlines;
 using NodaTime;
@@ -11,63 +10,53 @@ namespace FlightTrend.Console
     {
         private static void Main()
         {
-            var priceFinder = CreatePriceFinder();
-
-            var prices = priceFinder.FindLowestPrices(FindLowestPricesCriteriaBuilder.New()
-                .From("STN")
-                .To("SAW")
-                .LeavingOn(NextFriday)
-                .ReturningOn(OnFollowingSunday)
-                .Build()).Result;
-
-            //var departureFlightSpecification = new NullSpecification<FlightPrice>();
+            //var departureFlightSpecification = new NullSpecification<Flight>();
             var departureFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
             var returnFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
 
-            DisplayCheapestPrices(prices, departureFlightSpecification, returnFlightSpecification);
+            var priceFinder = CreatePriceFinder();
+
+            var cheapestPrice = priceFinder.FindCheapestReturnFlight(FindCheapestReturnFlightCriteriaBuilder.New()
+                .From("STN")
+                .To("SAW")
+                .Leaving(NextFriday)
+                .Returning(OnFollowingSunday)
+                .FilterDepartureWith(departureFlightSpecification)
+                .FilterReturnWith(returnFlightSpecification)
+                .Build()).Result;
+
+            DisplayCheapestPrices(cheapestPrice);
 
             System.Console.Read();
         }
 
-        private static void DisplayCheapestPrices(FindLowestPricesResult prices, ISpecification<FlightPrice> departureFlightSpecification, ISpecification<FlightPrice> returnFlightSpecification)
+        private static void DisplayCheapestPrices(ReturnFlight price)
         {
-            var departure = prices.DeparturePrices
-                .Where(departureFlightSpecification.IsSatisfiedBy)
-                .Aggregate(null, SmallestCost());
 
-            var arrival = prices.ReturnPrices
-                .Where(returnFlightSpecification.IsSatisfiedBy)
-                .Aggregate(null, SmallestCost());
-
-            if (departure == null ||  arrival == null)
+            if (price == null)
             {
                 System.Console.WriteLine("No flights found matching criteria");
             }
             else
             {
                 System.Console.WriteLine("Departure:");
-                DisplayPrice(departure);
+                DisplayPrice(price.Departure);
 
                 System.Console.WriteLine("Return:");
-                DisplayPrice(arrival);
+                DisplayPrice(price.Return);
 
-                System.Console.WriteLine($"Total Cost: {departure.Price + arrival.Price} GBP");
+                System.Console.WriteLine($"Total Cost: {price.TotalPrice} GBP");
             }
         }
 
-        private static Func<FlightPrice, FlightPrice, FlightPrice> SmallestCost()
-        {
-            return (a, b) => a?.Price < b?.Price ? a : b;
-        }
-
-        private static void DisplayPrice(FlightPrice price)
+        private static void DisplayPrice(Flight price)
         {
             System.Console.WriteLine($"dep={price.DepartureDate} {price.DepartureTime} arr={price.ArrivalDate} {price.ArrivalTime} => {price.Price}");
         }
 
-        private static IFlightPricesFinder CreatePriceFinder()
+        private static ICheapestFlightFinder CreatePriceFinder()
         {
-            return new PegasusFlightPriceFinder();
+            return new PegasusCheapestFlightFinder();
         }
 
         private static LocalDate NextFriday => SystemClock.Instance.GetCurrentInstant().InUtc().Date.Next(IsoDayOfWeek.Friday);

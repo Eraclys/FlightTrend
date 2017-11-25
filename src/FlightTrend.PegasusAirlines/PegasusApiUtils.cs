@@ -1,4 +1,5 @@
-using FlightTrend.Core;
+using FlightTrend.Core.FlightFinders;
+using NodaTime;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NodaTime;
+using FlightTrend.Core.Models;
 
 namespace FlightTrend.PegasusAirlines
 {
@@ -19,9 +20,9 @@ namespace FlightTrend.PegasusAirlines
             @"'-1#\s+([^#]+)(?:(?!fltDateDep).)*[^']+'([^']+)'(?:(?!fltDateArr).)*[^']+'([^']+)'(?:(?!fltTimeDep).)*[^']+'([^']+)'(?:(?!fltTimeArr).)*[^']+'([^']+)'",
             RegexOptions.Compiled | RegexOptions.Multiline);
 
-        public static IEnumerable<FlightPrice> ParseLowestPricesResult(string response)
+        public static IEnumerable<Flight> ParseReturnFlightResults(string response, string from, string to)
         {
-            var prices = new List<FlightPrice>();
+            var prices = new List<Flight>();
 
             foreach (Match match in PricesRegex.Matches(response))
             {
@@ -31,11 +32,13 @@ namespace FlightTrend.PegasusAirlines
                 var arrivalTime = match.Groups[5].Value;
                 var amount = match.Groups[1].Value;
 
-                prices.Add(new FlightPrice(
+                prices.Add(new Flight(
                     "Pegasus",
+                    from,
+                    to,
                     PegasusDateToLocalDate(departureDate),
-                    PegasusDateToLocalDate(arrivalDate),
                     PegasusTimeToLocalTime(departureTime),
+                    PegasusDateToLocalDate(arrivalDate),
                     PegasusTimeToLocalTime(arrivalTime),
                     decimal.Parse(amount)));
             }
@@ -43,7 +46,7 @@ namespace FlightTrend.PegasusAirlines
             return prices.Distinct();
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> GetParameters(FindLowestPricesCriteria criteria)
+        public static IEnumerable<KeyValuePair<string, string>> GetReturnFlightParameters(FindCheapestReturnFlightCriteria criteria)
         {
             return new Dictionary<string, string>
             {
@@ -51,9 +54,9 @@ namespace FlightTrend.PegasusAirlines
                 {"ARRPORT", criteria.ToAirport},
                 {"LBLDEPPORT", ""},
                 {"LBLARRPORT", ""},
-                {"TRIPTYPE", criteria.ReturnDate == null ? "S" : "R"},
+                {"TRIPTYPE", "R"},
                 {"DEPDATE", criteria.DepartureDate.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
-                {"RETDATE", criteria.ReturnDate?.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
+                {"RETDATE", criteria.ReturnDate.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
                 {"ADULT", "1"},
                 {"CHILD", "0"},
                 {"INFANT", "0"},
@@ -70,7 +73,7 @@ namespace FlightTrend.PegasusAirlines
             };
         }
 
-        public static async Task<string> FindLowestPricesRequest(IEnumerable<KeyValuePair<string,string>> parameters)
+        public static async Task<string> ExecuteFindReturnFlightsRequest(IEnumerable<KeyValuePair<string,string>> parameters)
         {
             using (var httpClient = CreateHttpClient())
             {

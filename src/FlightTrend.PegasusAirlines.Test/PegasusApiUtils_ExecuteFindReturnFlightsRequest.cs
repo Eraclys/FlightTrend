@@ -1,28 +1,30 @@
-using System;
-using System.Threading.Tasks;
-using FlightTrend.Core;
+using FlightTrend.Core.FlightFinders;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
+using System;
+using System.Threading.Tasks;
 
 // ReSharper disable InconsistentNaming
 
 namespace FlightTrend.PegasusAirlines.Test
 {
     [TestClass, Ignore]
-    public sealed class PegasusApiUtils_FindLowestPricesRequest
+    public sealed class PegasusApiUtils_ExecuteFindReturnFlightsRequest
     {
         [TestMethod]
         public async Task Should_Return_A_Response()
         {
-            var criteria = FindLowestPricesCriteriaBuilder
-                .Depart("STN", "SAW", OneWeekFromNow)
+            var criteria = FindCheapestReturnFlightCriteriaBuilder.New()
+                .From("STN")
+                .To("SAW")
+                .Leaving(OneWeekFromNow)
                 .Returning(TwoWeeksFromNow)
                 .Build();
 
-            var parameters = PegasusApiUtils.GetParameters(criteria);
+            var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
 
-            var response = await PegasusApiUtils.FindLowestPricesRequest(parameters);
+            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(parameters);
 
             response.Should().NotBeNullOrWhiteSpace();
         }

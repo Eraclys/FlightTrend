@@ -1,32 +1,23 @@
-﻿using System;
+using System;
 using NodaTime;
-using System.Collections.Generic;
 
-namespace FlightTrend.Core
+namespace FlightTrend.Core.Models
 {
-    public sealed class FindLowestPricesResult
+    public sealed class Flight : IEquatable<Flight>
     {
-        public FindLowestPricesResult(IEnumerable<FlightPrice> departurePrices, IEnumerable<FlightPrice> returnPrices)
-        {
-            DeparturePrices = departurePrices;
-            ReturnPrices = returnPrices;
-        }
-
-        public IEnumerable<FlightPrice> DeparturePrices { get; }
-        public IEnumerable<FlightPrice> ReturnPrices { get; }
-    }
-
-    public sealed class FlightPrice : IEquatable<FlightPrice>
-    {
-        public FlightPrice(
+        public Flight(
             string company,
+            string from,
+            string to,
             LocalDate departureDate,
-            LocalDate arrivalDate,
             LocalTime departureTime,
+            LocalDate arrivalDate,
             LocalTime arrivalTime,
             decimal price)
         {
             Company = company;
+            From = @from;
+            To = to;
             DepartureDate = departureDate;
             ArrivalDate = arrivalDate;
             DepartureTime = departureTime;
@@ -35,18 +26,20 @@ namespace FlightTrend.Core
         }
 
         public string Company { get; }
+        public string From { get; }
+        public string To { get; }
         public LocalDate DepartureDate { get; }
         public LocalDate ArrivalDate { get; }
         public LocalTime DepartureTime { get; }
         public LocalTime ArrivalTime { get; }
         public decimal Price { get; }
 
-        public bool Equals(FlightPrice other)
+        public bool Equals(Flight other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return DepartureDate.Equals(other.DepartureDate) && ArrivalDate.Equals(other.ArrivalDate) && DepartureTime.Equals(other.DepartureTime) && ArrivalTime.Equals(other.ArrivalTime) && Price == other.Price;
+            return string.Equals(Company, other.Company) && string.Equals(From, other.From) && string.Equals(To, other.To) && DepartureDate.Equals(other.DepartureDate) && ArrivalDate.Equals(other.ArrivalDate) && DepartureTime.Equals(other.DepartureTime) && ArrivalTime.Equals(other.ArrivalTime) && Price == other.Price;
         }
 
         public override bool Equals(object obj)
@@ -54,14 +47,17 @@ namespace FlightTrend.Core
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
 
-            return obj is FlightPrice && Equals((FlightPrice) obj);
+            return obj is Flight && Equals((Flight) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                var hashCode = DepartureDate.GetHashCode();
+                var hashCode = (Company != null ? Company.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (From != null ? From.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (To != null ? To.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ DepartureDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ ArrivalDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ DepartureTime.GetHashCode();
                 hashCode = (hashCode * 397) ^ ArrivalTime.GetHashCode();
@@ -70,12 +66,12 @@ namespace FlightTrend.Core
             }
         }
 
-        public static bool operator ==(FlightPrice left, FlightPrice right)
+        public static bool operator ==(Flight left, Flight right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(FlightPrice left, FlightPrice right)
+        public static bool operator !=(Flight left, Flight right)
         {
             return !Equals(left, right);
         }

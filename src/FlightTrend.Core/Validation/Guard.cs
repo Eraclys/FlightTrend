@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FlightTrend.Core
+namespace FlightTrend.Core.Validation
 {
     public static class Guard
     {

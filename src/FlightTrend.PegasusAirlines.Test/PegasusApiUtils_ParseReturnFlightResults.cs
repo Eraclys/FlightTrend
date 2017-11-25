@@ -1,26 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FlightTrend.Core;
+﻿using FlightTrend.Core.Models;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
 // ReSharper disable InconsistentNaming
 
 namespace FlightTrend.PegasusAirlines.Test
 {
     [TestClass]
-    public sealed class PegasusApiUtils_ParseLowestPricesResult
+    public sealed class PegasusApiUtils_ParseReturnFlightResults
     {
+        private const string From = "STN";
+        private const string To = "SAW";
+
         [TestMethod]
         public void Should_Parse_Correctly()
         {
-            var response = Resource.FindLowestPricesResponse;
+            var response = GetResourceAsString("FindCheapestReturnFlightResponse.html");
 
-            var result = PegasusApiUtils.ParseLowestPricesResult(response)?.ToList();
+            var result = PegasusApiUtils.ParseReturnFlightResults(response, From, To)?.ToList();
 
             result.Should().NotBeNull();
             result.Should().NotBeEmpty();
-            result.ShouldBeEquivalentTo(new List<FlightPrice>
+            result.ShouldBeEquivalentTo(new List<Flight>
             {
                 Item("08.12.2017", "12:35", "08.12.2017", "19:25", 81.99),
                 Item("08.12.2017", "23:15", "09.12.2017", "06:05", 96.99),
@@ -41,18 +46,29 @@ namespace FlightTrend.PegasusAirlines.Test
             });
         }
 
-        private static FlightPrice Item(
+        private static string GetResourceAsString(string path)
+        {
+            using (var stream = typeof(PegasusApiUtils_ParseReturnFlightResults).GetTypeInfo().Assembly.GetManifestResourceStream($"FlightTrend.PegasusAirlines.Test.Resources.{path}"))
+            using (var streamReader = new StreamReader(stream))
+            {
+                return streamReader.ReadToEnd();
+            }
+        }
+
+        private static Flight Item(
             string departureDate,
             string departureTime,
             string arrivalDate,
             string arrivalTime,
             double amount)
         {
-            return new FlightPrice(
+            return new Flight(
                 "Pegasus",
+                From,
+                To,
                 PegasusApiUtils.PegasusDateToLocalDate(departureDate),
-                PegasusApiUtils.PegasusDateToLocalDate(arrivalDate),
                 PegasusApiUtils.PegasusTimeToLocalTime(departureTime),
+                PegasusApiUtils.PegasusDateToLocalDate(arrivalDate),
                 PegasusApiUtils.PegasusTimeToLocalTime(arrivalTime),
                 (decimal) amount);
         }

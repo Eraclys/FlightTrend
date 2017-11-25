@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FlightTrend.Core
+namespace FlightTrend.Core.Extensions
 {
     public static class EnumerableExtensions
     {
