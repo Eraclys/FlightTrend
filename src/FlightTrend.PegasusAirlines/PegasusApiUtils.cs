@@ -59,7 +59,7 @@ namespace FlightTrend.PegasusAirlines
                 {"INFANT", "0"},
                 {"STUDENT", "0"},
                 {"SOLDIER", "0"},
-                {"CURRENCY", criteria.Currency},
+                {"CURRENCY", "GBP"},
                 {"LC", "EN"},
                 {"FLEX", ""},
                 {"userId", ""},

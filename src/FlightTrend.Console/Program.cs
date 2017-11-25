@@ -13,9 +13,11 @@ namespace FlightTrend.Console
         {
             var priceFinder = CreatePriceFinder();
 
-            var prices = priceFinder.FindLowestPrices(FindLowestPricesCriteriaBuilder
-                .Depart("STN", "SAW", NextFriday)
-                .Returning(OnFollowingSunday)
+            var prices = priceFinder.FindLowestPrices(FindLowestPricesCriteriaBuilder.New()
+                .From("STN")
+                .To("SAW")
+                .LeavingOn(NextFriday)
+                .ReturningOn(OnFollowingSunday)
                 .Build()).Result;
 
             //var departureFlightSpecification = new NullSpecification<FlightPrice>();

@@ -7,19 +7,11 @@ namespace FlightTrend.Core
         private string _fromAirport;
         private string _toAirport;
         private LocalDate _departureDate;
-        private LocalDate? _returnDate;
-        private string _currency;
+        private LocalDate _returnDate;
 
-        public static FindLowestPricesCriteriaBuilder Depart(string fromAirport, string toAirport, LocalDate departureDate)
+        public static FindLowestPricesCriteriaBuilder New()
         {
-            var builder = new FindLowestPricesCriteriaBuilder
-            {
-                _fromAirport = fromAirport,
-                _toAirport = toAirport,
-                _departureDate = departureDate
-            };
-
-            return builder;
+            return new FindLowestPricesCriteriaBuilder();
         }
 
         public FindLowestPricesCriteria Build()
@@ -28,19 +20,30 @@ namespace FlightTrend.Core
                 _fromAirport,
                 _toAirport,
                 _departureDate,
-                _returnDate,
-                _currency ?? "GBP");
+                _returnDate);
+        }
+
+        public  FindLowestPricesCriteriaBuilder From(string fromAirport)
+        {
+            _fromAirport = fromAirport;
+            return this;
+        }
+
+        public FindLowestPricesCriteriaBuilder To(string toAirport)
+        {
+            _toAirport = toAirport;
+            return this;
+        }
+
+        public FindLowestPricesCriteriaBuilder Leaving(LocalDate date)
+        {
+            _departureDate = date;
+            return this;
         }
 
         public FindLowestPricesCriteriaBuilder Returning(LocalDate date)
         {
             _returnDate = date;
-            return this;
-        }
-
-        public FindLowestPricesCriteriaBuilder UsingCurrency(string currency)
-        {
-            _currency = currency;
             return this;
         }
     }
