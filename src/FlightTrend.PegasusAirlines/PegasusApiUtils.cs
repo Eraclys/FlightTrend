@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -103,7 +104,12 @@ namespace FlightTrend.PegasusAirlines
 
         private static HttpClient CreateHttpClient()
         {
-            var httpClient = new HttpClient();
+            var handler = new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+
+            var httpClient = new HttpClient(handler);
 
             httpClient.DefaultRequestHeaders.Host = "book.flypgs.com";
             httpClient.DefaultRequestHeaders.Add("Origin", "https://www.flypgs.com");
