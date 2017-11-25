@@ -3,10 +3,12 @@ using FlightTrend.Core.Serialization;
 using NodaTime;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace FlightTrend.Serializers
 {
-    public class ReturnFlightArchiveSerializer : ISerializer<ReturnFlightArchive>
+    [UsedImplicitly]
+    public sealed class ReturnFlightArchiveSerializer : ISerializer<ReturnFlightArchive>
     {
         private const string Separator = "|";
         private readonly ISerializer<LocalDate> _dateSerializer;
@@ -29,7 +31,9 @@ namespace FlightTrend.Serializers
         public string Serialize(ReturnFlightArchive value)
         {
             if (value == null)
+            {
                 return null;
+            }
 
             var values = new[] {_instantSerializer.Serialize(value.Instant)}
                 .Concat(SerializeFlight(value.ReturnFlight.Departure))
@@ -41,7 +45,9 @@ namespace FlightTrend.Serializers
         public ReturnFlightArchive Deserialize(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
+            {
                 return null;
+            }
 
             var values = value.Split(Separator.ToCharArray());
 
@@ -52,7 +58,8 @@ namespace FlightTrend.Serializers
                     DeserializeFlight(values.Skip(9).Take(8).ToArray())));
         }
 
-        private Flight DeserializeFlight(string[] values)
+        [NotNull]
+        private Flight DeserializeFlight([NotNull] IReadOnlyList<string> values)
         {
             return new Flight(
                 values[0],
@@ -65,7 +72,8 @@ namespace FlightTrend.Serializers
                 _decimalSerializer.Deserialize(values[7]));
         }
 
-        private IEnumerable<string> SerializeFlight(Flight flight)
+        [NotNull]
+        private IEnumerable<string> SerializeFlight([NotNull] Flight flight)
         {
             return new[]
             {

@@ -2,6 +2,7 @@
 using FlightTrend.Core.Models;
 using FlightTrend.Core.Specifications;
 using FlightTrend.PegasusAirlines;
+using JetBrains.Annotations;
 using NodaTime;
 
 namespace FlightTrend.Console
@@ -30,7 +31,7 @@ namespace FlightTrend.Console
             System.Console.Read();
         }
 
-        private static void DisplayCheapestPrices(ReturnFlight price)
+        private static void DisplayCheapestPrices([CanBeNull] ReturnFlight price)
         {
 
             if (price == null)
@@ -54,6 +55,7 @@ namespace FlightTrend.Console
             System.Console.WriteLine($"dep={price.DepartureDate} {price.DepartureTime} arr={price.ArrivalDate} {price.ArrivalTime} => {price.Price}");
         }
 
+        [NotNull]
         private static ICheapestFlightFinder CreatePriceFinder()
         {
             return new PegasusCheapestFlightFinder();

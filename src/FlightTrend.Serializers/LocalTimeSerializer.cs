@@ -1,9 +1,11 @@
 ﻿using FlightTrend.Core.Serialization;
+using JetBrains.Annotations;
 using NodaTime;
 
 namespace FlightTrend.Serializers
 {
-    public class LocalTimeSerializer : ISerializer<LocalTime>
+    [UsedImplicitly]
+    public sealed class LocalTimeSerializer : ISerializer<LocalTime>
     {
         public string Serialize(LocalTime value)
         {

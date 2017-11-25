@@ -1,5 +1,8 @@
-﻿namespace FlightTrend.Core.Specifications
+﻿using JetBrains.Annotations;
+
+namespace FlightTrend.Core.Specifications
 {
+    [UsedImplicitly]
     public sealed class AndSpecification<T> : ISpecification<T>
     {
         private readonly ISpecification<T> _left;

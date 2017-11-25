@@ -3,6 +3,7 @@ using FlightTrend.Core.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace FlightTrend.Serializers
 {
@@ -17,9 +18,10 @@ namespace FlightTrend.Serializers
 
         public string Serialize(IEnumerable<ReturnFlightArchive> value)
         {
-            return value.Aggregate(String.Empty, (a, b) => $"{a}{_itemSerializer.Serialize(b)}{Environment.NewLine}");
+            return value?.Aggregate(String.Empty, (a, b) => $"{a}{_itemSerializer.Serialize(b)}{Environment.NewLine}");
         }
 
+        [NotNull]
         public IEnumerable<ReturnFlightArchive> Deserialize(string value)
         {
             if (String.IsNullOrWhiteSpace(value))

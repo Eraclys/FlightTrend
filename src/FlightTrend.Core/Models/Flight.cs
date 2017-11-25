@@ -1,4 +1,5 @@
 using System;
+using JetBrains.Annotations;
 using NodaTime;
 
 namespace FlightTrend.Core.Models
@@ -16,7 +17,7 @@ namespace FlightTrend.Core.Models
             decimal price)
         {
             Company = company;
-            From = @from;
+            From = from;
             To = to;
             DepartureDate = departureDate;
             ArrivalDate = arrivalDate;
@@ -34,7 +35,7 @@ namespace FlightTrend.Core.Models
         public LocalTime ArrivalTime { get; }
         public decimal Price { get; }
 
-        public bool Equals(Flight other)
+        public bool Equals([CanBeNull] Flight other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -42,7 +43,7 @@ namespace FlightTrend.Core.Models
             return string.Equals(Company, other.Company) && string.Equals(From, other.From) && string.Equals(To, other.To) && DepartureDate.Equals(other.DepartureDate) && ArrivalDate.Equals(other.ArrivalDate) && DepartureTime.Equals(other.DepartureTime) && ArrivalTime.Equals(other.ArrivalTime) && Price == other.Price;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals([CanBeNull] object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
@@ -66,12 +67,12 @@ namespace FlightTrend.Core.Models
             }
         }
 
-        public static bool operator ==(Flight left, Flight right)
+        public static bool operator ==([CanBeNull] Flight left, [CanBeNull] Flight right)
         {
             return Equals(left, right);
         }
 
-        public static bool operator !=(Flight left, Flight right)
+        public static bool operator !=([CanBeNull] Flight left, [CanBeNull] Flight right)
         {
             return !Equals(left, right);
         }

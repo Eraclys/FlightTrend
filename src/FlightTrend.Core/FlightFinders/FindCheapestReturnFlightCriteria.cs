@@ -1,19 +1,21 @@
 ﻿using FlightTrend.Core.Models;
 using FlightTrend.Core.Specifications;
 using FlightTrend.Core.Validation;
+using JetBrains.Annotations;
 using NodaTime;
 
 namespace FlightTrend.Core.FlightFinders
 {
+    [UsedImplicitly]
     public sealed class FindCheapestReturnFlightCriteria
     {
         public FindCheapestReturnFlightCriteria(
-            string fromAirport,
-            string toAirport,
+            [NotNull] string fromAirport,
+            [NotNull] string toAirport,
             LocalDate departureDate,
             LocalDate returnDate,
-            ISpecification<Flight> departureFlightsFilter,
-            ISpecification<Flight> returnFlightsFilter)
+            [CanBeNull] ISpecification<Flight> departureFlightsFilter,
+            [CanBeNull] ISpecification<Flight> returnFlightsFilter)
         {
             Guard.MustNotBeNullOrWhiteSpace(fromAirport, nameof(fromAirport));
             Guard.MustNotBeNullOrWhiteSpace(toAirport, nameof(toAirport));

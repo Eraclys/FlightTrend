@@ -1,9 +1,13 @@
-﻿namespace FlightTrend.Core.Serialization
+﻿using JetBrains.Annotations;
+
+namespace FlightTrend.Core.Serialization
 {
     public interface ISerializer<T>
     {
-        string Serialize(T value);
+        [CanBeNull]
+        string Serialize([CanBeNull]T value);
 
-        T Deserialize(string value);
+        [CanBeNull]
+        T Deserialize([CanBeNull]string value);
     }
 }

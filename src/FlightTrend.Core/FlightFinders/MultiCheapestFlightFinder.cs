@@ -1,9 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FlightTrend.Core.Models;
+using JetBrains.Annotations;
 
 namespace FlightTrend.Core.FlightFinders
 {
+    [UsedImplicitly]
     public sealed class MultiCheapestFlightFinder : ICheapestFlightFinder
     {
         private readonly ICheapestFlightFinder[] _innerFinders;

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
 
 // ReSharper disable InconsistentNaming
 
@@ -21,7 +22,7 @@ namespace FlightTrend.PegasusAirlines.Test
         {
             var response = GetResourceAsString("FindCheapestReturnFlightResponse.html");
 
-            var result = PegasusApiUtils.ParseReturnFlightResults(response, From, To)?.ToList();
+            var result = PegasusApiUtils.ParseReturnFlightResults(response, From, To).ToList();
 
             result.Should().NotBeNull();
             result.Should().NotBeEmpty();
@@ -55,6 +56,7 @@ namespace FlightTrend.PegasusAirlines.Test
             }
         }
 
+        [NotNull]
         private static Flight Item(
             string departureDate,
             string departureTime,

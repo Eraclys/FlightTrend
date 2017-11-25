@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FlightTrend.Core.Models;
+using JetBrains.Annotations;
 
 namespace FlightTrend.PegasusAirlines
 {
@@ -20,6 +21,7 @@ namespace FlightTrend.PegasusAirlines
             @"'-1#\s+([^#]+)(?:(?!fltDateDep).)*[^']+'([^']+)'(?:(?!fltDateArr).)*[^']+'([^']+)'(?:(?!fltTimeDep).)*[^']+'([^']+)'(?:(?!fltTimeArr).)*[^']+'([^']+)'",
             RegexOptions.Compiled | RegexOptions.Multiline);
 
+        [NotNull]
         public static IEnumerable<Flight> ParseReturnFlightResults(string response, string from, string to)
         {
             var prices = new List<Flight>();
@@ -46,6 +48,7 @@ namespace FlightTrend.PegasusAirlines
             return prices.Distinct();
         }
 
+        [NotNull]
         public static IEnumerable<KeyValuePair<string, string>> GetReturnFlightParameters(FindCheapestReturnFlightCriteria criteria)
         {
             return new Dictionary<string, string>
@@ -106,6 +109,7 @@ namespace FlightTrend.PegasusAirlines
                 0);
         }
 
+        [NotNull]
         private static HttpClient CreateHttpClient()
         {
             var handler = new HttpClientHandler

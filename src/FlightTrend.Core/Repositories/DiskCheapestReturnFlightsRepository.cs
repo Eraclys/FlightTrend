@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using FlightTrend.Core.Models;
 using FlightTrend.Core.Serialization;
+using JetBrains.Annotations;
 
 namespace FlightTrend.Core.Repositories
 {
+    [UsedImplicitly]
     public sealed class DiskCheapestReturnFlightsRepository : ICheapestReturnFlightsRepository
     {
         private readonly string _savePath;
@@ -46,7 +49,7 @@ namespace FlightTrend.Core.Repositories
             using (var streamReader = new StreamReader(fileStream))
             {
                 var content = await streamReader.ReadToEndAsync();
-                return _serializer.Deserialize(content);
+                return _serializer.Deserialize(content) ?? Enumerable.Empty<ReturnFlightArchive>();
             }
         }
     }

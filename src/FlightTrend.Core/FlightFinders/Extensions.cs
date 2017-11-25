@@ -1,19 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FlightTrend.Core.Models;
+using JetBrains.Annotations;
 
 namespace FlightTrend.Core.FlightFinders
 {
+    [UsedImplicitly]
     public static class Extensions
     {
-        public static Flight GetCheapestFlight(this IEnumerable<Flight> flights)
+        public static Flight GetCheapestFlight([NotNull] this IEnumerable<Flight> flights)
         {
             return flights.Aggregate((Flight)null, (a, b) => a?.Price < b?.Price ? a : b);
         }
 
-        public static ReturnFlight GetCheapestReturnFlight(this IEnumerable<ReturnFlight> returnFlights)
+        internal static ReturnFlight GetCheapestReturnFlight([NotNull] this IEnumerable<ReturnFlight> returnFlights)
         {
             return returnFlights.Aggregate((ReturnFlight)null, (a, b) => a?.TotalPrice < b?.TotalPrice ? a : b);
+        }
+
+        public static async Task<IEnumerable<ReturnFlight>> FindCheapestReturnFlightsForMultipleTravelDates([NotNull] this ICheapestFlightFinder cheapestFlightFinder, [NotNull] FindCheapestReturnFlightsForMultipleTravelDatesCriteria criteria)
+        {
+            var tasks = criteria.ReturnFlightDates
+                .Select(x => new FindCheapestReturnFlightCriteria(criteria.FromAirport, criteria.ToAirport, x.DepartureDate, x.ReturnDate, criteria.DepartureFlightsFilter, criteria.ReturnFlightsFilter))
+                .Select(cheapestFlightFinder.FindCheapestReturnFlight);
+
+            return await Task.WhenAll(tasks);
         }
     }
 }

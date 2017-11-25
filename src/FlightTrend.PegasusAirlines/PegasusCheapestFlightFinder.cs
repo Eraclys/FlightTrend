@@ -2,11 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using FlightTrend.Core.Models;
+using JetBrains.Annotations;
 
 namespace FlightTrend.PegasusAirlines
 {
     public sealed class PegasusCheapestFlightFinder : ICheapestFlightFinder
     {
+        [ItemCanBeNull]
         public async Task<ReturnFlight> FindCheapestReturnFlight(FindCheapestReturnFlightCriteria criteria)
         {
             var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
