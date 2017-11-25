@@ -45,7 +45,7 @@ namespace FlightTrend.Console
 
         private static void DisplayHeaders()
         {
-            System.Console.WriteLine($"{"", 10}|{"DepDate", 10}|{"DepTime",10}|{"ArrDate",10}|{"ArrTime",10}|{"Price",10}");
+            System.Console.WriteLine($"{"", 10}|{"DepDate", 15}|{"DepTime",10}|{"ArrDate",15}|{"ArrTime",10}|{"Price",10}");
         }
 
         [ItemNotNull]
@@ -64,23 +64,23 @@ namespace FlightTrend.Console
             }
         }
 
-        private static void DisplayReturnFlight([CanBeNull] ReturnFlight returnFlight)
+        private static void DisplayReturnFlight([NotNull] ReturnFlight returnFlight)
         {
-            if (returnFlight == null)
+            if (returnFlight.TotalPrice < 110)
             {
-                System.Console.WriteLine("No flights found matching criteria");
+                System.Console.ForegroundColor = ConsoleColor.DarkGreen;
             }
-            else
-            {
-                DisplayPrice("Departure", returnFlight.Departure);
-                DisplayPrice("Return", returnFlight.Return);
-                System.Console.WriteLine($"{"Total",10}|{returnFlight.TotalPrice,50}");
-            }
+
+            DisplayPrice("Departure", returnFlight.Departure);
+            DisplayPrice("Return", returnFlight.Return);
+            System.Console.WriteLine($"{"Total",10}|{returnFlight.TotalPrice,64}");
+            System.Console.WriteLine();
+            System.Console.ResetColor();
         }
 
         private static void DisplayPrice(string label, [NotNull] Flight price)
         {
-            System.Console.WriteLine($"{label,10}|{price.DepartureDate.ToString("ddd MMM yy", CultureInfo.InvariantCulture),10}|{price.DepartureTime,10}|{price.ArrivalDate.ToString("ddd MMM yy", CultureInfo.InvariantCulture),10}|{price.ArrivalTime,10}|{price.Price,10}");
+            System.Console.WriteLine($"{label,10}|{price.DepartureDate.ToString("ddd dd MMM yy", CultureInfo.InvariantCulture),15}|{price.DepartureTime,10}|{price.ArrivalDate.ToString("ddd dd MMM yy", CultureInfo.InvariantCulture),15}|{price.ArrivalTime,10}|{price.Price,10}");
         }
 
         [NotNull]
