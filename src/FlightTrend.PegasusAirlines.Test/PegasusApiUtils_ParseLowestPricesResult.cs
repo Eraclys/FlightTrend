@@ -49,6 +49,7 @@ namespace FlightTrend.PegasusAirlines.Test
             double amount)
         {
             return new FlightPrice(
+                "Pegasus",
                 PegasusApiUtils.PegasusDateToLocalDate(departureDate),
                 PegasusApiUtils.PegasusDateToLocalDate(arrivalDate),
                 PegasusApiUtils.PegasusTimeToLocalTime(departureTime),

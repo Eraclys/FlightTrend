@@ -64,6 +64,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FlightTrend.Core.Specifications\FlightTrend.Core.Specifications.csproj">
+      <Project>{cdfb29c3-ea23-4001-97a8-5160229a2bee}</Project>
+      <Name>FlightTrend.Core.Specifications</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FlightTrend.Core\FlightTrend.Core.csproj">
       <Project>{de480762-6ca8-45b2-b236-8138aa8f9e3c}</Project>
       <Name>FlightTrend.Core</Name>

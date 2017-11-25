@@ -14,7 +14,7 @@ namespace FlightTrend.PegasusAirlines
     public static class PegasusApiUtils
     {
         private const string FindPricesUrl = "https://book.flypgs.com/Common/MemberRezvResults.jsp?activeLanguage=EN HTTP/1.1";
-        
+
         private static readonly Regex PricesRegex = new Regex(
             @"'-1#\s+([^#]+)(?:(?!fltDateDep).)*[^']+'([^']+)'(?:(?!fltDateArr).)*[^']+'([^']+)'(?:(?!fltTimeDep).)*[^']+'([^']+)'(?:(?!fltTimeArr).)*[^']+'([^']+)'",
             RegexOptions.Compiled | RegexOptions.Multiline);
@@ -32,6 +32,7 @@ namespace FlightTrend.PegasusAirlines
                 var amount = match.Groups[1].Value;
 
                 prices.Add(new FlightPrice(
+                    "Pegasus",
                     PegasusDateToLocalDate(departureDate),
                     PegasusDateToLocalDate(arrivalDate),
                     PegasusTimeToLocalTime(departureTime),
@@ -53,10 +54,10 @@ namespace FlightTrend.PegasusAirlines
                 {"TRIPTYPE", criteria.ReturnDate == null ? "S" : "R"},
                 {"DEPDATE", criteria.DepartureDate.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
                 {"RETDATE", criteria.ReturnDate?.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
-                {"ADULT", criteria.Adult.ToString()},
-                {"CHILD", criteria.Child.ToString()},
+                {"ADULT", "1"},
+                {"CHILD", "0"},
                 {"INFANT", "0"},
-                {"STUDENT", criteria.Student.ToString()},
+                {"STUDENT", "0"},
                 {"SOLDIER", "0"},
                 {"CURRENCY", criteria.Currency},
                 {"LC", "EN"},

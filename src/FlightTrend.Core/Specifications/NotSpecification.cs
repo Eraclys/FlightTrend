@@ -1,6 +1,6 @@
 ﻿namespace FlightTrend.Core.Specifications
 {
-    public class NotSpecification<T> : ISpecification<T>
+    public sealed class NotSpecification<T> : ISpecification<T>
     {
         private readonly ISpecification<T> _innerSpec;
 

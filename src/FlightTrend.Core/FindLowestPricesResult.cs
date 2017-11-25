@@ -19,12 +19,14 @@ namespace FlightTrend.Core
     public sealed class FlightPrice : IEquatable<FlightPrice>
     {
         public FlightPrice(
+            string company,
             LocalDate departureDate,
             LocalDate arrivalDate,
             LocalTime departureTime,
             LocalTime arrivalTime,
             decimal price)
         {
+            Company = company;
             DepartureDate = departureDate;
             ArrivalDate = arrivalDate;
             DepartureTime = departureTime;
@@ -32,6 +34,7 @@ namespace FlightTrend.Core
             Price = price;
         }
 
+        public string Company { get; }
         public LocalDate DepartureDate { get; }
         public LocalDate ArrivalDate { get; }
         public LocalTime DepartureTime { get; }

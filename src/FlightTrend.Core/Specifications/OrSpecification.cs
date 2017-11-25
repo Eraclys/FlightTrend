@@ -1,6 +1,6 @@
 ﻿namespace FlightTrend.Core.Specifications
 {
-    public class OrSpecification<T> : ISpecification<T>
+    public sealed class OrSpecification<T> : ISpecification<T>
     {
         private readonly ISpecification<T> _left;
         private readonly ISpecification<T> _right;

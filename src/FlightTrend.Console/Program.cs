@@ -1,4 +1,7 @@
-﻿using FlightTrend.Core;
+﻿using System;
+using System.Linq;
+using FlightTrend.Core;
+using FlightTrend.Core.Specifications;
 using FlightTrend.PegasusAirlines;
 using NodaTime;
 
@@ -15,18 +18,44 @@ namespace FlightTrend.Console
                 .Returning(OnFollowingSunday)
                 .Build()).Result;
 
-            DisplayPrices(prices);
+            //var departureFlightSpecification = new NullSpecification<FlightPrice>();
+            var departureFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
+            var returnFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
+
+            DisplayCheapestPrices(prices, departureFlightSpecification, returnFlightSpecification);
 
             System.Console.Read();
         }
 
-        private static void DisplayPrices(FindLowestPricesResult prices)
+        private static void DisplayCheapestPrices(FindLowestPricesResult prices, ISpecification<FlightPrice> departureFlightSpecification, ISpecification<FlightPrice> returnFlightSpecification)
         {
-            System.Console.WriteLine("Departure:");
-            prices.DeparturePrices.ForEach(DisplayPrice);
+            var departure = prices.DeparturePrices
+                .Where(departureFlightSpecification.IsSatisfiedBy)
+                .Aggregate(null, SmallestCost());
 
-            System.Console.WriteLine("Return:");
-            prices.ReturnPrices.ForEach(DisplayPrice);
+            var arrival = prices.ReturnPrices
+                .Where(returnFlightSpecification.IsSatisfiedBy)
+                .Aggregate(null, SmallestCost());
+
+            if (departure == null ||  arrival == null)
+            {
+                System.Console.WriteLine("No flights found matching criteria");
+            }
+            else
+            {
+                System.Console.WriteLine("Departure:");
+                DisplayPrice(departure);
+
+                System.Console.WriteLine("Return:");
+                DisplayPrice(arrival);
+
+                System.Console.WriteLine($"Total Cost: {departure.Price + arrival.Price} GBP");
+            }
+        }
+
+        private static Func<FlightPrice, FlightPrice, FlightPrice> SmallestCost()
+        {
+            return (a, b) => a?.Price < b?.Price ? a : b;
         }
 
         private static void DisplayPrice(FlightPrice price)
