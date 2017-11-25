@@ -19,13 +19,16 @@ namespace FlightTrend.Core.FlightFinders
             return returnFlights.Aggregate((ReturnFlight)null, (a, b) => a?.TotalPrice < b?.TotalPrice ? a : b);
         }
 
+        [ItemNotNull]
         public static async Task<IEnumerable<ReturnFlight>> FindCheapestReturnFlightsForMultipleTravelDates([NotNull] this ICheapestFlightFinder cheapestFlightFinder, [NotNull] FindCheapestReturnFlightsForMultipleTravelDatesCriteria criteria)
         {
             var tasks = criteria.ReturnFlightDates
                 .Select(x => new FindCheapestReturnFlightCriteria(criteria.FromAirport, criteria.ToAirport, x.DepartureDate, x.ReturnDate, criteria.DepartureFlightsFilter, criteria.ReturnFlightsFilter))
                 .Select(cheapestFlightFinder.FindCheapestReturnFlight);
 
-            return await Task.WhenAll(tasks);
+            var results = await Task.WhenAll(tasks);
+
+            return results.Where(x => x != null);
         }
     }
 }

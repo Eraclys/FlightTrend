@@ -41,6 +41,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
     </Reference>
@@ -78,6 +84,10 @@
     <ProjectReference Include="..\FlightTrend.PegasusAirlines\FlightTrend.PegasusAirlines.csproj">
       <Project>{d0810add-1ad1-4b7d-a19a-f768a12cbf49}</Project>
       <Name>FlightTrend.PegasusAirlines</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlightTrend.Serializers\FlightTrend.Serializers.csproj">
+      <Project>{adf13f9d-8d09-4ed9-93c2-4f44d3d376e1}</Project>
+      <Name>FlightTrend.Serializers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -20,8 +20,8 @@ namespace FlightTrend.Serializers
 
             var values = value.Split('-');
             var year = int.Parse(values[0]);
-            var month = int.Parse(values[0]);
-            var day = int.Parse(values[0]);
+            var month = int.Parse(values[1]);
+            var day = int.Parse(values[2]);
 
             return new LocalDate(year, month, day);
         }

@@ -34,12 +34,20 @@ namespace FlightTrend.Core.Repositories
 
         private async Task WriteToFile(IEnumerable<ReturnFlightArchive> records, FileMode fileMode)
         {
+            var directoryInfo = new FileInfo(_savePath).Directory;
+
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+
             var serializedRecords = _serializer.Serialize(records);
 
             using (var fileStream = new FileStream(_savePath, fileMode, FileAccess.Write, FileShare.None))
             using (var streamWriter = new StreamWriter(fileStream))
             {
                 await streamWriter.WriteAsync(serializedRecords);
+                await streamWriter.FlushAsync();
             }
         }
 

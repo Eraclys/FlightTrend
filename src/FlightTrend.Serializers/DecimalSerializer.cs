@@ -3,7 +3,7 @@ using System.Globalization;
 
 namespace FlightTrend.Serializers
 {
-    public class DecimalSerializer : ISerializer<decimal>
+    public sealed class DecimalSerializer : ISerializer<decimal>
     {
         public string Serialize(decimal value)
         {

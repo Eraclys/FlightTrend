@@ -26,7 +26,7 @@ namespace FlightTrend.PegasusAirlines.Test
 
             result.Should().NotBeNull();
             result.Should().NotBeEmpty();
-            result.ShouldBeEquivalentTo(new List<Flight>
+            result.ShouldAllBeEquivalentTo(new List<Flight>
             {
                 Item("08.12.2017", "12:35", "08.12.2017", "19:25", 81.99),
                 Item("08.12.2017", "23:15", "09.12.2017", "06:05", 96.99),

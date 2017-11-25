@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using FlightTrend.Core.Extensions;
-using FlightTrend.Core.FlightFinders;
+﻿using FlightTrend.Core.FlightFinders;
 using FlightTrend.Core.Models;
+using FlightTrend.Core.Repositories;
 using FlightTrend.Core.Specifications;
 using FlightTrend.PegasusAirlines;
+using FlightTrend.Serializers;
 using JetBrains.Annotations;
 using NodaTime;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 
 namespace FlightTrend.Console
 {
@@ -20,6 +23,7 @@ namespace FlightTrend.Console
             var returnFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
 
             var priceFinder = CreatePriceFinder();
+            var repository = CreateCheapestReturnFlightsRepository();
 
             var returnFlights = priceFinder.FindCheapestReturnFlightsForMultipleTravelDates(FindCheapestReturnFlightsForMultipleTravelDatesCriteriaBuilder.New()
                 .From("STN")
@@ -27,7 +31,11 @@ namespace FlightTrend.Console
                 .FilterDepartureWith(departureFlightSpecification)
                 .FilterReturnWith(returnFlightSpecification)
                 .TravellingDates(EveryWeekendForTheNextYear().ToArray())
-                .Build()).Result;
+                .Build()).Result.ToList();
+
+            var currentInstant = SystemClock.Instance.GetCurrentInstant();
+
+            repository.Save(returnFlights.Select(x => new ReturnFlightArchive(currentInstant, x))).Wait();
 
             DisplayHeaders();
             returnFlights.ForEach(DisplayReturnFlight);
@@ -79,6 +87,21 @@ namespace FlightTrend.Console
         private static ICheapestFlightFinder CreatePriceFinder()
         {
             return new PegasusCheapestFlightFinder();
+        }
+
+        [NotNull]
+        private static ICheapestReturnFlightsRepository CreateCheapestReturnFlightsRepository()
+        {
+            var savePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "FlightTrend\\FlightTrend.sav");
+
+            return new DiskCheapestReturnFlightsRepository(
+                new ReturnFlightArchiveCollectionSerializer(
+                    new ReturnFlightArchiveSerializer(
+                        new InstantSerializer(),
+                        new LocalDateSerializer(),
+                        new LocalTimeSerializer(),
+                        new DecimalSerializer())),
+                savePath);
         }
     }
 }

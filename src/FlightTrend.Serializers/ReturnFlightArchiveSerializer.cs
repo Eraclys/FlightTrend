@@ -1,4 +1,5 @@
-﻿using FlightTrend.Core.Models;
+﻿using System;
+using FlightTrend.Core.Models;
 using FlightTrend.Core.Serialization;
 using NodaTime;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace FlightTrend.Serializers
                 return null;
             }
 
-            var values = value.Split(Separator.ToCharArray());
+            var values = value.Split(new[] {Separator}, StringSplitOptions.RemoveEmptyEntries);
 
             return new ReturnFlightArchive(
                 _instantSerializer.Deserialize(values[0]),
