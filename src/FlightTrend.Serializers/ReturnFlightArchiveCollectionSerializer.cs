@@ -25,7 +25,9 @@ namespace FlightTrend.Serializers
         public IEnumerable<ReturnFlightArchive> Deserialize(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
+            {
                 return Enumerable.Empty<ReturnFlightArchive>();
+            }
 
             return value
                 .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)

@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FlightTrend.Core.Models;
+﻿using FlightTrend.Core.Models;
 using JetBrains.Annotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FlightTrend.Core.FlightFinders
 {
