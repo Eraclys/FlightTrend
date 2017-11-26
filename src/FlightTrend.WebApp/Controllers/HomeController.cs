@@ -50,7 +50,7 @@ namespace FlightTrend.WebApp.Controllers
                     .TravellingDates(EveryWeekendForTheNextYear().ToArray())
                     .Build())).ToList();
 
-            _cache.Set(CacheKey, returnFlights, TimeSpan.FromHours(6));
+            _cache.Set(CacheKey, returnFlights, TimeSpan.FromMinutes(15));
 
             return returnFlights;
         }
