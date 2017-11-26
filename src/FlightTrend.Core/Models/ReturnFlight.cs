@@ -11,6 +11,6 @@
         public Flight Departure { get; }
         public Flight Return { get; }
 
-        public decimal TotalPrice => Departure.Price + Return.Price;
+        public double TotalPrice => Departure.Price + Return.Price;
     }
 }

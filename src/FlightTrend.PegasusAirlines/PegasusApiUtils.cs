@@ -42,7 +42,7 @@ namespace FlightTrend.PegasusAirlines
                     PegasusTimeToLocalTime(departureTime),
                     PegasusDateToLocalDate(arrivalDate),
                     PegasusTimeToLocalTime(arrivalTime),
-                    decimal.Parse(amount)));
+                    float.Parse(amount)));
             }
 
             return prices.Distinct();

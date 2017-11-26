@@ -16,7 +16,7 @@ namespace FlightTrend.Serializers.Test
                     new InstantSerializer(),
                     new LocalDateSerializer(),
                     new LocalTimeSerializer(),
-                    new DecimalSerializer()));
+                    new FloatSerializer()));
 
         [TestMethod]
         public void SerializeAndDeserializeShouldReturnTheSame()

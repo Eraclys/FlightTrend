@@ -35,7 +35,7 @@ namespace FlightTrend.Serializers.Test
         [NotNull]
         public static Flight GenerateFlight()
         {
-            return new Flight(RandomString(), RandomString(), RandomString(), RandomDate(), RandomTime(), RandomDate(), RandomTime(), (decimal)Random.NextDouble());
+            return new Flight(RandomString(), RandomString(), RandomString(), RandomDate(), RandomTime(), RandomDate(), RandomTime(), (float)Random.NextDouble());
         }
 
         public static LocalTime RandomTime()

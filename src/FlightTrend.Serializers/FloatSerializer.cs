@@ -3,16 +3,16 @@ using System.Globalization;
 
 namespace FlightTrend.Serializers
 {
-    public sealed class DecimalSerializer : ISerializer<decimal>
+    public sealed class FloatSerializer : ISerializer<float>
     {
-        public string Serialize(decimal value)
+        public string Serialize(float value)
         {
             return value.ToString(CultureInfo.InvariantCulture);
         }
 
-        public decimal Deserialize(string value)
+        public float Deserialize(string value)
         {
-            return decimal.Parse(value);
+            return float.Parse(value);
         }
     }
 }

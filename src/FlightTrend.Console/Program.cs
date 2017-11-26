@@ -100,7 +100,7 @@ namespace FlightTrend.Console
                         new InstantSerializer(),
                         new LocalDateSerializer(),
                         new LocalTimeSerializer(),
-                        new DecimalSerializer())),
+                        new FloatSerializer())),
                 savePath);
         }
     }

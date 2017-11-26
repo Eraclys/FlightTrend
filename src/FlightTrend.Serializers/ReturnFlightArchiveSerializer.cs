@@ -13,7 +13,7 @@ namespace FlightTrend.Serializers
     {
         private const string Separator = "|";
         private readonly ISerializer<LocalDate> _dateSerializer;
-        private readonly ISerializer<decimal> _decimalSerializer;
+        private readonly ISerializer<float> _floatSerializer;
         private readonly ISerializer<Instant> _instantSerializer;
         private readonly ISerializer<LocalTime> _timeSerializer;
 
@@ -21,12 +21,12 @@ namespace FlightTrend.Serializers
             ISerializer<Instant> instantSerializer,
             ISerializer<LocalDate> dateSerializer,
             ISerializer<LocalTime> timeSerializer,
-            ISerializer<decimal> decimalSerializer)
+            ISerializer<float> floatSerializer)
         {
             _instantSerializer = instantSerializer;
             _dateSerializer = dateSerializer;
             _timeSerializer = timeSerializer;
-            _decimalSerializer = decimalSerializer;
+            _floatSerializer = floatSerializer;
         }
 
         public string Serialize(ReturnFlightArchive value)
@@ -70,7 +70,7 @@ namespace FlightTrend.Serializers
                 _timeSerializer.Deserialize(values[4]),
                 _dateSerializer.Deserialize(values[5]),
                 _timeSerializer.Deserialize(values[6]),
-                _decimalSerializer.Deserialize(values[7]));
+                _floatSerializer.Deserialize(values[7]));
         }
 
         [NotNull]
@@ -85,7 +85,7 @@ namespace FlightTrend.Serializers
                 _timeSerializer.Serialize(flight.DepartureTime),
                 _dateSerializer.Serialize(flight.ArrivalDate),
                 _timeSerializer.Serialize(flight.ArrivalTime),
-                _decimalSerializer.Serialize(flight.Price)
+                _floatSerializer.Serialize(flight.Price)
             };
         }
     }

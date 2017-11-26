@@ -14,7 +14,7 @@ namespace FlightTrend.Core.Models
             LocalTime departureTime,
             LocalDate arrivalDate,
             LocalTime arrivalTime,
-            decimal price)
+            float price)
         {
             Company = company;
             From = from;
@@ -33,7 +33,7 @@ namespace FlightTrend.Core.Models
         public LocalDate ArrivalDate { get; }
         public LocalTime DepartureTime { get; }
         public LocalTime ArrivalTime { get; }
-        public decimal Price { get; }
+        public float Price { get; }
 
         public bool Equals([CanBeNull] Flight other)
         {
