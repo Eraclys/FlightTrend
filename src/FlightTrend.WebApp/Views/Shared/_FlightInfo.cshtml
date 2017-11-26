@@ -1,0 +1,31 @@
+﻿@model FlightTrend.Core.Models.Flight
+@using FlightTrend.Core.Extensions;
+
+
+<div class="flight-info">
+    <div class="flight-info-type">
+        @(!ViewData.ContainsKey("isReturn") ? "Outbound" : "Return")
+    </div>
+    <div class="flight-info-date">
+        @Model.DepartureDate.ToString("ddd dd MMM yy")
+    </div>
+    <div class="flight-info-destination">
+        @if (!ViewData.ContainsKey("isReturn"))
+        {
+            <span>@Model.From -> @Model.To</span>
+        }
+        else
+        {
+            <span>@Model.To -> @Model.From</span>
+        }
+    </div>
+    <div class="flight-info-time">
+        @Model.DepartureTime.ToString("HH:mm") - @Model.ArrivalTime.ToString("HH:mm") @if (Model.DepartureDate != Model.ArrivalDate)
+                                                                                      {
+                                                                                          <span>@($"+{(Model.ArrivalDate - Model.DepartureDate).Days}")</span>
+                                                                                      }
+    </div>
+    <div class="flight-info-price">
+        @Math.Round(Model.Price).ToString("C0")
+    </div>
+</div>

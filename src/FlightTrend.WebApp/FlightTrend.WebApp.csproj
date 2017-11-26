@@ -186,6 +186,8 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_FlightInfo.cshtml" />
+    <Content Include="Views\Shared\_ReturnFlight.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FlightTrend.Core.Specifications\FlightTrend.Core.Specifications.csproj">

@@ -7,26 +7,8 @@
         @foreach (var item in Model)
         {
             <div class="row">
-                <div class="col-md-6">
-                    <h5>Departure @item.Departure.From -> @item.Departure.To</h5>
-                    <label>Company</label> <span>@item.Departure.Company</span>
-                    <label>Departure Date</label> <span>@item.Departure.DepartureDate</span><br/>
-                    <label>Departure Time</label> <span>@item.Departure.DepartureTime</span><br/>
-                    <label>Arrival Date</label> <span>@item.Departure.ArrivalDate</span><br/>
-                    <label>Arrival Time</label> <span>@item.Departure.ArrivalTime</span><br/>
-                    <label>Price</label> <span>@item.Departure.Price.ToString("C")</span><br />
-                </div>
-                <div class="col-md-6">
-                    <h5>Return @item.Departure.To -> @item.Departure.From</h5>
-                    <label>Company</label> <span>@item.Departure.Company</span>
-                    <label>Departure Date</label> <span>@item.Departure.DepartureDate</span><br />
-                    <label>Departure Time</label> <span>@item.Departure.DepartureTime</span><br />
-                    <label>Arrival Date</label> <span>@item.Departure.ArrivalDate</span><br />
-                    <label>Arrival Time</label> <span>@item.Departure.ArrivalTime</span><br />
-                    <label>Price</label> <span>@item.Departure.Price.ToString("C")</span><br />
-                </div>
                 <div class="col-md-12">
-                    <label>Total</label> <span>@item.TotalPrice.ToString("C")</span>
+                    @Html.Partial("_ReturnFlight", item)
                 </div>
             </div>
         }

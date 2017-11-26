@@ -1,1 +1,78 @@
-﻿
+﻿html {
+    font-size: 15px;
+}
+
+.return-flight-info {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    align-content: stretch;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+}
+
+.return-flight-price {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #576493;
+    color: #fff;
+    font-weight: bold;
+}
+
+.return-flight-price.highlight {
+    background-color: #3b9913;
+}
+
+.flight-info-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    align-content: stretch;
+    flex-grow: 3;
+}
+
+.flight-info-container .flight-info:first-child {
+    border-right: 1px solid #000; 
+}
+
+.flight-info {
+    flex-grow: 1;
+    background-color: #eee;
+}
+
+.flight-info-type {
+    padding: 0.1rem 0.5rem;
+    text-transform: uppercase;
+    background-color: #576493;
+    color: #fff;
+}
+
+.flight-info-destination {
+    padding: 0.1rem 0.5rem;
+}
+
+.flight-info-date {
+    padding: 0.1rem 0.5rem;
+    background-color: #ccc;
+}
+
+.flight-info-time {
+    padding: 0.1rem 0.5rem;
+    font-weight: bold;
+}
+
+
+.flight-info-time span {
+    font-size: 0.8rem;
+    vertical-align: top;
+    color: red;
+}
+
+.flight-info-price {
+    padding: 0.1rem 0.5rem;
+    background-color: #F3A100;
+    color: #fff;
+}

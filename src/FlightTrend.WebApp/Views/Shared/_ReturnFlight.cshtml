@@ -1,0 +1,13 @@
+﻿@model FlightTrend.Core.Models.ReturnFlight
+
+
+<div class="return-flight-info">
+    <div class="return-flight-price @(Model.TotalPrice < 110 ? "highlight" : "")">
+        <span>@Math.Round(Model.TotalPrice).ToString("C0")</span>
+    </div>
+    <div class="flight-info-container">
+        @Html.Partial("_FlightInfo", Model.Departure)
+
+        @Html.Partial("_FlightInfo", Model.Return, new ViewDataDictionary { { "isReturn", true } })
+    </div>
+</div>
