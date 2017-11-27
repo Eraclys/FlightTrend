@@ -9,9 +9,6 @@ namespace FlightTrend.Core.Repositories
     public interface ICheapestReturnFlightsRepository
     {
         [NotNull]
-        Task Append(IEnumerable<ReturnFlightArchive> records);
-
-        [NotNull]
         Task Save(IEnumerable<ReturnFlightArchive> records);
 
         [NotNull]

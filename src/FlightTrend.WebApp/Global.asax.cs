@@ -9,7 +9,9 @@ namespace FlightTrend.WebApp
     {
         protected void Application_Start()
         {
-            var dependencyResolver = Ioc.Bootstrap();
+            var config = new WebAppConfig().LoadFromWebConfig();
+
+            var dependencyResolver = Ioc.Bootstrap(config);
 
             ControllerBuilder.Current.SetControllerFactory(new FlightTrendControllerFactory(dependencyResolver));
 

@@ -22,11 +22,6 @@ namespace FlightTrend.Core.Repositories
             _savePath = savePath;
         }
 
-        public Task Append(IEnumerable<ReturnFlightArchive> records)
-        {
-            return WriteToFile(records, FileMode.Append);
-        }
-
         public Task Save(IEnumerable<ReturnFlightArchive> records)
         {
             return WriteToFile(records, FileMode.Create);

@@ -4,7 +4,9 @@ using FlightTrend.WebApp.Controllers;
 using JetBrains.Annotations;
 using System;
 using System.Web.Mvc;
+using FlightTrend.Core.Repositories;
 using Microsoft.Extensions.Caching.Memory;
+using NodaTime;
 using IDependencyResolver = FlightTrend.Core.Ioc.IDependencyResolver;
 
 namespace FlightTrend.WebApp
@@ -23,7 +25,11 @@ namespace FlightTrend.WebApp
         {
             if (controllerType == typeof(HomeController))
             {
-                return new HomeController(_dependencyResolver.GetService<ICheapestFlightFinder>(), _dependencyResolver.GetService<MemoryCache>());
+                return new HomeController(
+                    _dependencyResolver.GetService<ICheapestFlightFinder>(),
+                    _dependencyResolver.GetService<MemoryCache>(),
+                    _dependencyResolver.GetService<ICheapestReturnFlightsRepository>(),
+                    _dependencyResolver.GetService<IClock>());
             }
 
             return null;
