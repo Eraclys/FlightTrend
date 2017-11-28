@@ -20,8 +20,26 @@ namespace FlightTrend.Queries
                 .To("SAW")
                 .FilterDepartureWith(departureFlightSpecification)
                 .FilterReturnWith(returnFlightSpecification)
-                .TravellingDates(EveryWeekendForTheNextFiveMonths().ToArray())
+                .TravellingDates(EveryWeekendForTheNextFiveMonths().NotInside(BookedFlights()).ToArray())
                 .Build();
+        }
+
+        [NotNull]
+        public static IEnumerable<ReturnFlightDates> NotInside(this IEnumerable<ReturnFlightDates> values,
+            IEnumerable<ReturnFlightDates> rangesToRemove)
+        {
+            return values
+                .Where(x => !rangesToRemove.Any(r => r.DepartureDate <= x.DepartureDate && x.ReturnDate <= r.ReturnDate));
+        }
+
+
+        [ItemNotNull]
+        private static IEnumerable<ReturnFlightDates> BookedFlights()
+        {
+            yield return new ReturnFlightDates(new LocalDate(2017,12,01), new LocalDate(2017,12,03));
+            yield return new ReturnFlightDates(new LocalDate(2017, 12, 22), new LocalDate(2018, 01, 01));
+            yield return new ReturnFlightDates(new LocalDate(2018, 01, 26), new LocalDate(2018, 01, 28));
+            yield return new ReturnFlightDates(new LocalDate(2018, 02, 23), new LocalDate(2018, 02, 25));
         }
 
         [ItemNotNull]

@@ -2,7 +2,7 @@
 
 
 <div class="return-flight-info">
-    <div class="return-flight-price @(Model.ReturnFlight.TotalPrice < 110 ? "highlight" : "")">
+    <div class="return-flight-price @(Model.ReturnFlight.TotalPrice < 90 ? "highlight" : "")">
         <span>£ @Math.Round(Model.ReturnFlight.TotalPrice).ToString("####")</span>
     </div>
     <div class="flight-info-container">
