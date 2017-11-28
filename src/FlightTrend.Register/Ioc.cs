@@ -1,5 +1,4 @@
-﻿
-using FlightTrend.Core.FlightFinders;
+﻿using FlightTrend.Core.FlightFinders;
 using FlightTrend.Core.Ioc;
 using FlightTrend.Core.Repositories;
 using FlightTrend.PegasusAirlines;
@@ -9,12 +8,12 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Caching.Memory;
 using NodaTime;
 
-namespace FlightTrend.WebApp
+namespace FlightTrend.Register
 {
-    internal class Ioc
+    public class Ioc
     {
         [NotNull]
-        public static IDependencyResolver Bootstrap(WebAppConfig config)
+        public static IDependencyResolver Bootstrap(FlightTrendConfig config)
         {
             var clock = SystemClock.Instance;
 

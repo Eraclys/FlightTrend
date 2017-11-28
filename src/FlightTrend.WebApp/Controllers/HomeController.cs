@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using FlightTrend.Core.FlightFinders;
+﻿using FlightTrend.Core.FlightFinders;
 using FlightTrend.Core.Models;
 using FlightTrend.Core.Repositories;
-using FlightTrend.Core.Specifications;
+using FlightTrend.Queries;
 using FlightTrend.WebApp.ViewModels;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Caching.Memory;
 using NodaTime;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace FlightTrend.WebApp.Controllers
 {
@@ -63,37 +63,13 @@ namespace FlightTrend.WebApp.Controllers
         [ItemNotNull]
         private async Task<IEnumerable<ReturnFlightArchive>> FetchUpdatedReturnFlights()
         {
-            var departureFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
-            var returnFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
+            var criteria = Criteria.DefaultCriteria();
 
-            var returnFlights = await _flightFinder.FindCheapestReturnFlightsForMultipleTravelDates(
-                FindCheapestReturnFlightsForMultipleTravelDatesCriteriaBuilder.New()
-                    .From("STN")
-                    .To("SAW")
-                    .FilterDepartureWith(departureFlightSpecification)
-                    .FilterReturnWith(returnFlightSpecification)
-                    .TravellingDates(EveryWeekendForTheNextYear().ToArray())
-                    .Build());
+            var returnFlights = await _flightFinder.FindCheapestReturnFlightsForMultipleTravelDates(criteria);
 
             var currentInstant = _clock.GetCurrentInstant();
 
             return returnFlights.Select(x => new ReturnFlightArchive(currentInstant, x));
-        }
-
-        [ItemNotNull]
-        private static IEnumerable<ReturnFlightDates> EveryWeekendForTheNextYear()
-        {
-            var startDate = SystemClock.Instance.GetCurrentInstant().InUtc().Date;
-
-            for (var i = 0; i < 52; i++)
-            {
-                var friday = startDate.Next(IsoDayOfWeek.Friday);
-                var sunday = friday.Next(IsoDayOfWeek.Sunday);
-
-                yield return new ReturnFlightDates(friday, sunday);
-
-                startDate = sunday;
-            }
         }
     }
 }

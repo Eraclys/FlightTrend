@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using FlightTrend.Register;
 
 namespace FlightTrend.WebApp
 {
@@ -9,7 +10,7 @@ namespace FlightTrend.WebApp
     {
         protected void Application_Start()
         {
-            var config = new WebAppConfig().LoadFromWebConfig();
+            var config = new FlightTrendConfig().LoadFromWebConfig();
 
             var dependencyResolver = Ioc.Bootstrap(config);
 

@@ -16,9 +16,10 @@ namespace FlightTrend.Core.Repositories
     {
         public IEnumerable<ReturnFlightArchive> Optimize(IEnumerable<ReturnFlightArchive> records)
         {
-            return records
-                .GroupBy(x => x.ReturnFlight)
-                .Select(g => new ReturnFlightArchive(g.Select(x => x.Instant).Min(), g.Key));
+            // TODO: this is wrong
+            return records;
+                //.GroupBy(x => x.ReturnFlight)
+                //.Select(g => new ReturnFlightArchive(g.Select(x => x.Instant).Min(), g.Key));
         }
     }
 

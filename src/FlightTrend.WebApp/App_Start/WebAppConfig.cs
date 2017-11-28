@@ -1,17 +1,13 @@
 ﻿using System.Configuration;
+using FlightTrend.Register;
 using JetBrains.Annotations;
 
 namespace FlightTrend.WebApp
 {
-    internal sealed class WebAppConfig
-    {
-        public string AzureBlobStorageConnectionString { get; set; }
-    }
-
-    internal static class WebAppConfigExtensions
+    internal static class FlightTrendConfigExtensions
     {
         [NotNull]
-        public static WebAppConfig LoadFromWebConfig([NotNull] this WebAppConfig config)
+        public static FlightTrendConfig LoadFromWebConfig([NotNull] this FlightTrendConfig config)
         {
             config.AzureBlobStorageConnectionString = ConfigurationManager.AppSettings["AzureBlobStorageConnectionString"];
 

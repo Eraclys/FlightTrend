@@ -182,7 +182,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="App_Start\Ioc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\CheapestReturnFlightsViewModel.cs" />
   </ItemGroup>
@@ -222,6 +221,14 @@
     <ProjectReference Include="..\FlightTrend.PegasusAirlines\FlightTrend.PegasusAirlines.csproj">
       <Project>{d0810add-1ad1-4b7d-a19a-f768a12cbf49}</Project>
       <Name>FlightTrend.PegasusAirlines</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlightTrend.Queries\FlightTrend.Queries.csproj">
+      <Project>{48B4FE97-62EB-4032-927E-0EA8BF68B677}</Project>
+      <Name>FlightTrend.Queries</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FlightTrend.Register\FlightTrend.Register.csproj">
+      <Project>{2604A8F0-9997-4AFD-BC91-A93DB5ED766D}</Project>
+      <Name>FlightTrend.Register</Name>
     </ProjectReference>
     <ProjectReference Include="..\FlightTrend.Repositories.AzureBlobStorage\FlightTrend.Repositories.AzureBlobStorage.csproj">
       <Project>{DDEE6415-0AE8-4156-BE13-C3FAB833FAAB}</Project>

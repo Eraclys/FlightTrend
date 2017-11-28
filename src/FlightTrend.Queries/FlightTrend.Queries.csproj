@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FlightTrend.Core.Specifications\FlightTrend.Core.Specifications.csproj" />
+    <ProjectReference Include="..\FlightTrend.Core\FlightTrend.Core.csproj" />
+  </ItemGroup>
+
+</Project>
