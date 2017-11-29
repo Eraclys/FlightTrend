@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightTrend.PegasusAirlines
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightTrend.PegasusAirlines.Test", "FlightTrend.PegasusAirlines.Test\FlightTrend.PegasusAirlines.Test.csproj", "{EC4BD850-4774-4990-AF32-858E4F160ABF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlightTrend.Console", "FlightTrend.Console\FlightTrend.Console.csproj", "{F98B95A8-8F79-4839-8692-FFEC890C01E9}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightTrend.Core.Specifications", "FlightTrend.Core.Specifications\FlightTrend.Core.Specifications.csproj", "{CDFB29C3-EA23-4001-97A8-5160229A2BEE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlightTrend.Serializers", "FlightTrend.Serializers\FlightTrend.Serializers.csproj", "{ADF13F9D-8D09-4ED9-93C2-4F44D3D376E1}"
@@ -43,10 +41,6 @@ Global
 		{EC4BD850-4774-4990-AF32-858E4F160ABF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC4BD850-4774-4990-AF32-858E4F160ABF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC4BD850-4774-4990-AF32-858E4F160ABF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F98B95A8-8F79-4839-8692-FFEC890C01E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F98B95A8-8F79-4839-8692-FFEC890C01E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F98B95A8-8F79-4839-8692-FFEC890C01E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F98B95A8-8F79-4839-8692-FFEC890C01E9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CDFB29C3-EA23-4001-97A8-5160229A2BEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CDFB29C3-EA23-4001-97A8-5160229A2BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDFB29C3-EA23-4001-97A8-5160229A2BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU

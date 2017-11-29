@@ -76,20 +76,17 @@ namespace FlightTrend.PegasusAirlines
             };
         }
 
-        public static async Task<string> ExecuteFindReturnFlightsRequest(IEnumerable<KeyValuePair<string,string>> parameters)
+        public static async Task<string> ExecuteFindReturnFlightsRequest([NotNull] HttpClient httpClient, IEnumerable<KeyValuePair<string,string>> parameters)
         {
-            using (var httpClient = CreateHttpClient())
+            var httpResponseMessage = await httpClient.PostAsync(FindPricesUrl, new FormUrlEncodedContent(parameters));
+            var response = await httpResponseMessage.Content.ReadAsStringAsync();
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                var httpResponseMessage = await httpClient.PostAsync(FindPricesUrl, new FormUrlEncodedContent(parameters));
-                var response = await httpResponseMessage.Content.ReadAsStringAsync();
-
-                if (!httpResponseMessage.IsSuccessStatusCode)
-                {
-                    throw new Exception(response);
-                }
-
-                return response;
+                throw new Exception(response);
             }
+
+            return response;
         }
 
         public static LocalDate PegasusDateToLocalDate(string date)
@@ -110,7 +107,7 @@ namespace FlightTrend.PegasusAirlines
         }
 
         [NotNull]
-        private static HttpClient CreateHttpClient()
+        public static HttpClient CreateHttpClient()
         {
             var handler = new HttpClientHandler
             {

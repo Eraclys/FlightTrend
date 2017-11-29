@@ -1,18 +1,26 @@
 ﻿using FlightTrend.Core.FlightFinders;
-using System.Linq;
-using System.Threading.Tasks;
 using FlightTrend.Core.Models;
 using JetBrains.Annotations;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace FlightTrend.PegasusAirlines
 {
     public sealed class PegasusCheapestFlightFinder : ICheapestFlightFinder
     {
+        private readonly HttpClient _httpClient;
+
+        public PegasusCheapestFlightFinder()
+        {
+            _httpClient = PegasusApiUtils.CreateHttpClient();
+        }
+
         [ItemCanBeNull]
         public async Task<ReturnFlight> FindCheapestReturnFlight(FindCheapestReturnFlightCriteria criteria)
         {
             var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
-            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(parameters);
+            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(_httpClient, parameters);
             var results = PegasusApiUtils.ParseReturnFlightResults(response, criteria.FromAirport, criteria.ToAirport).ToList();
 
             var departureFlight = results
@@ -29,6 +37,11 @@ namespace FlightTrend.PegasusAirlines
             }
 
             return null;
+        }
+
+        public void Dispose()
+        {
+            _httpClient?.Dispose();
         }
     }
 }

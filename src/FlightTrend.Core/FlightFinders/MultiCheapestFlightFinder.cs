@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using System.Linq;
 using System.Threading.Tasks;
+using FlightTrend.Core.Extensions;
 
 namespace FlightTrend.Core.FlightFinders
 {
@@ -22,6 +23,11 @@ namespace FlightTrend.Core.FlightFinders
             var results = await Task.WhenAll(tasks);
 
             return results.GetCheapestReturnFlight();
+        }
+
+        public void Dispose()
+        {
+            _innerFinders.ForEach(x => x?.Dispose());
         }
     }
 }

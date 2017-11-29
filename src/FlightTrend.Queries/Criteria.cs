@@ -20,7 +20,7 @@ namespace FlightTrend.Queries
                 .To("SAW")
                 .FilterDepartureWith(departureFlightSpecification)
                 .FilterReturnWith(returnFlightSpecification)
-                .TravellingDates(EveryWeekendForTheNextFiveMonths().NotInside(BookedFlights()).ToArray())
+                .TravellingDates(EveryWeekendForTheNextXWeeks(12).NotInside(BookedFlights()).ToArray())
                 .Build();
         }
 
@@ -43,11 +43,11 @@ namespace FlightTrend.Queries
         }
 
         [ItemNotNull]
-        private static IEnumerable<ReturnFlightDates> EveryWeekendForTheNextFiveMonths()
+        private static IEnumerable<ReturnFlightDates> EveryWeekendForTheNextXWeeks(int weeksCount)
         {
             var startDate = SystemClock.Instance.GetCurrentInstant().InUtc().Date;
 
-            for (var i = 0; i < 22; i++)
+            for (var i = 0; i < weeksCount; i++)
             {
                 var friday = startDate.Next(IsoDayOfWeek.Friday);
                 var sunday = friday.Next(IsoDayOfWeek.Sunday);

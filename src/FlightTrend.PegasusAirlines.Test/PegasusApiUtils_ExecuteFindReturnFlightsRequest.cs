@@ -23,8 +23,9 @@ namespace FlightTrend.PegasusAirlines.Test
                 .Build();
 
             var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
+            var httpClient = PegasusApiUtils.CreateHttpClient();
 
-            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(parameters);
+            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(httpClient, parameters);
 
             response.Should().NotBeNullOrWhiteSpace();
         }

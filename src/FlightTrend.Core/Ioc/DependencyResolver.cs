@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
+using FlightTrend.Core.Extensions;
 
 namespace FlightTrend.Core.Ioc
 {
@@ -28,6 +30,15 @@ namespace FlightTrend.Core.Ioc
             }
 
             _registrations[serviceType] = instance;
+        }
+
+        public void Dispose()
+        {
+            _registrations
+                .Select(x => x.Value)
+                .Where(x => x is IDisposable)
+                .Cast<IDisposable>()
+                .ForEach(x => x?.Dispose());
         }
     }
 }
