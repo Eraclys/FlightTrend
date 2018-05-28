@@ -27,18 +27,18 @@ namespace FlightTrend.Repositories.AzureBlobStorage
         {
             var serialized = _serializer.Serialize(records);
 
-            var cloudBlockBlob = await GetBlockBlobReference();
+            var cloudBlockBlob = await GetBlockBlobReference().ConfigureAwait(false);
 
-            await cloudBlockBlob.UploadTextAsync(serialized);
+            await cloudBlockBlob.UploadTextAsync(serialized).ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ReturnFlightArchive>> Get()
         {
-            var cloudBlockBlob = await GetBlockBlobReference();
+            var cloudBlockBlob = await GetBlockBlobReference().ConfigureAwait(false);
 
-            if (await cloudBlockBlob.ExistsAsync())
+            if (await cloudBlockBlob.ExistsAsync().ConfigureAwait(false))
             {
-                var serialized = await cloudBlockBlob.DownloadTextAsync();
+                var serialized = await cloudBlockBlob.DownloadTextAsync().ConfigureAwait(false);
 
                 return _serializer.Deserialize(serialized) ?? Enumerable.Empty<ReturnFlightArchive>();
             }
@@ -54,7 +54,7 @@ namespace FlightTrend.Repositories.AzureBlobStorage
                 .CreateCloudBlobClient()
                 .GetContainerReference("flight-trend");
 
-            await container.CreateIfNotExistsAsync();
+            await container.CreateIfNotExistsAsync().ConfigureAwait(false);
 
             var blobReference = container.GetBlockBlobReference("ReturnFlightArchives.sav");
 

@@ -36,7 +36,7 @@ namespace FlightTrend.WebApp.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var viewModel = await GetCheapestReturnFlightsViewModel();
+            var viewModel = await GetCheapestReturnFlightsViewModel().ConfigureAwait(true);
 
             return View(viewModel);
         }
@@ -48,14 +48,15 @@ namespace FlightTrend.WebApp.Controllers
                 return (CheapestReturnFlightsViewModel)result;
             }
 
-            var archives = (await _cheapestReturnFlightsRepository.Get()).ToList();
-            var newReturnFlights = (await FetchUpdatedReturnFlights()).ToList();
+            //var archives = (await _cheapestReturnFlightsRepository.Get()).ToList();
+            var archives = new ReturnFlightArchive[0];
+            var newReturnFlights = (await FetchUpdatedReturnFlights().ConfigureAwait(true)).ToList();
 
             var viewModel = new CheapestReturnFlightsViewModel(archives, newReturnFlights);
 
             _cache.Set(CacheKey, viewModel, TimeSpan.FromMinutes(15));
 
-            await _cheapestReturnFlightsRepository.Save(archives.Concat(newReturnFlights));
+            //await _cheapestReturnFlightsRepository.Save(archives.Concat(newReturnFlights));
 
             return viewModel;
         }
@@ -65,7 +66,7 @@ namespace FlightTrend.WebApp.Controllers
         {
             var criteria = Criteria.DefaultCriteria();
 
-            var returnFlights = await _flightFinder.FindCheapestReturnFlightsForMultipleTravelDates(criteria);
+            var returnFlights = await _flightFinder.FindCheapestReturnFlightsForMultipleTravelDates(criteria).ConfigureAwait(true);
 
             var currentInstant = _clock.GetCurrentInstant();
 

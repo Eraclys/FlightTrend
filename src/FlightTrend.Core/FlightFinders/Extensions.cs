@@ -26,7 +26,7 @@ namespace FlightTrend.Core.FlightFinders
                 .Select(x => new FindCheapestReturnFlightCriteria(criteria.FromAirport, criteria.ToAirport, x.DepartureDate, x.ReturnDate, criteria.DepartureFlightsFilter, criteria.ReturnFlightsFilter))
                 .Select(cheapestFlightFinder.FindCheapestReturnFlight);
 
-            var results = await Task.WhenAll(tasks);
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return results.Where(x => x != null);
         }

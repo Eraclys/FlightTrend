@@ -20,7 +20,7 @@ namespace FlightTrend.PegasusAirlines
         public async Task<ReturnFlight> FindCheapestReturnFlight(FindCheapestReturnFlightCriteria criteria)
         {
             var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
-            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(_httpClient, parameters);
+            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(_httpClient, parameters).ConfigureAwait(true);
             var results = PegasusApiUtils.ParseReturnFlightResults(response, criteria.FromAirport, criteria.ToAirport).ToList();
 
             var departureFlight = results
