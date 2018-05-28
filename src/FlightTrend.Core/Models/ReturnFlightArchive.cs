@@ -17,7 +17,7 @@ namespace FlightTrend.Core.Models
             ReturnFlight = returnFlight;
         }
 
-        public bool Equals([CanBeNull] ReturnFlightArchive other)
+        public bool Equals(ReturnFlightArchive other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -25,7 +25,7 @@ namespace FlightTrend.Core.Models
             return Instant.Equals(other.Instant) && Equals(ReturnFlight, other.ReturnFlight);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

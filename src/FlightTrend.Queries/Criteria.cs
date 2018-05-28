@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using NodaTime;
 using System.Collections.Generic;
 using System.Linq;
+using FlightTrend.Core.Models;
 
 namespace FlightTrend.Queries
 {
@@ -12,7 +13,10 @@ namespace FlightTrend.Queries
         [NotNull]
         public static FindCheapestReturnFlightsForMultipleTravelDatesCriteria DefaultCriteria()
         {
-            var departureFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
+            var departureFlightSpecification = new OrSpecification<Flight>(new DepartureTimeIsAfter(
+                new LocalTime(20, 00)),
+                new DepartureTimeIsBefore(new LocalTime(1,0)));
+
             var returnFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
 
             return FindCheapestReturnFlightsForMultipleTravelDatesCriteriaBuilder.New()
@@ -36,7 +40,7 @@ namespace FlightTrend.Queries
         [ItemNotNull]
         private static IEnumerable<ReturnFlightDates> BookedFlights()
         {
-            yield return new ReturnFlightDates(new LocalDate(2017,12,01), new LocalDate(2017,12,03));
+            yield return new ReturnFlightDates(new LocalDate(2017, 12, 01), new LocalDate(2017, 12, 03));
             yield return new ReturnFlightDates(new LocalDate(2017, 12, 22), new LocalDate(2018, 01, 01));
             yield return new ReturnFlightDates(new LocalDate(2018, 01, 26), new LocalDate(2018, 01, 28));
             yield return new ReturnFlightDates(new LocalDate(2018, 02, 23), new LocalDate(2018, 02, 25));

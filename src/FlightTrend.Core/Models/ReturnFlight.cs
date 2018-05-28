@@ -16,7 +16,7 @@ namespace FlightTrend.Core.Models
 
         public float TotalPrice => Departure.Price + Return.Price;
 
-        public bool Equals([CanBeNull] ReturnFlight other)
+        public bool Equals(ReturnFlight other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -24,7 +24,7 @@ namespace FlightTrend.Core.Models
             return Equals(Departure, other.Departure) && Equals(Return, other.Return);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

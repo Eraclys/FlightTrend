@@ -47,6 +47,7 @@ namespace FlightTrend.PegasusAirlines.Test
             });
         }
 
+        [NotNull]
         private static string GetResourceAsString(string path)
         {
             using (var stream = typeof(PegasusApiUtils_ParseReturnFlightResults).GetTypeInfo().Assembly.GetManifestResourceStream($"FlightTrend.PegasusAirlines.Test.Resources.{path}"))

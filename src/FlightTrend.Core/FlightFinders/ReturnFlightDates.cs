@@ -16,7 +16,7 @@ namespace FlightTrend.Core.FlightFinders
             ReturnDate = returnDate;
         }
 
-        public bool Equals([CanBeNull] ReturnFlightDates other)
+        public bool Equals(ReturnFlightDates other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -24,7 +24,7 @@ namespace FlightTrend.Core.FlightFinders
             return DepartureDate.Equals(other.DepartureDate) && ReturnDate.Equals(other.ReturnDate);
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;

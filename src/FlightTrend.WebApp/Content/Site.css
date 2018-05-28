@@ -5,6 +5,8 @@
 .return-flight-info {
     margin-bottom: 2rem;
     display: flex;
+    -o-justify-content: space-around;
+    -webkit-justify-content: space-around;
     justify-content: space-around;
     align-items: stretch;
     align-content: stretch;
@@ -13,9 +15,16 @@
 }
 
 .return-flight-price {
+    -o-flex-grow: 1;
+    -webkit-flex-grow: 1;
     flex-grow: 1;
     display: flex;
+    -ms-align-items: center;
+    -o-align-items: center;
+    -webkit-align-items: center;
     align-items: center;
+    -o-justify-content: center;
+    -webkit-justify-content: center;
     justify-content: center;
     background-color: #576493;
     color: #fff;
@@ -28,9 +37,19 @@
 
 .flight-info-container {
     display: flex;
+    -o-justify-content: space-around;
+    -webkit-justify-content: space-around;
     justify-content: space-around;
+    -ms-align-items: center;
+    -o-align-items: center;
+    -webkit-align-items: center;
     align-items: center;
+    -moz-align-content: stretch;
+    -o-align-content: stretch;
+    -webkit-align-content: stretch;
     align-content: stretch;
+    -o-flex-grow: 3;
+    -webkit-flex-grow: 3;
     flex-grow: 3;
 }
 
@@ -39,6 +58,8 @@
 }
 
 .flight-info {
+    -o-flex-grow: 1;
+    -webkit-flex-grow: 1;
     flex-grow: 1;
     background-color: #eee;
 }

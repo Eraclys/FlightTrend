@@ -8,6 +8,7 @@ namespace FlightTrend.Serializers
     [UsedImplicitly]
     public sealed class InstantSerializer : ISerializer<Instant>
     {
+        [NotNull]
         public string Serialize(Instant value)
         {
             return value.ToUnixTimeTicks().ToString(CultureInfo.InvariantCulture);

@@ -7,6 +7,7 @@ namespace FlightTrend.Serializers
     [UsedImplicitly]
     public sealed class LocalTimeSerializer : ISerializer<LocalTime>
     {
+        [NotNull]
         public string Serialize(LocalTime value)
         {
             return value.TickOfDay.ToString();

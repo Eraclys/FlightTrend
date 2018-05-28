@@ -35,7 +35,7 @@ namespace FlightTrend.Core.Models
         public LocalTime ArrivalTime { get; }
         public float Price { get; }
 
-        public bool Equals([CanBeNull] Flight other)
+        public bool Equals(Flight other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -43,7 +43,7 @@ namespace FlightTrend.Core.Models
             return string.Equals(Company, other.Company) && string.Equals(From, other.From) && string.Equals(To, other.To) && DepartureDate.Equals(other.DepartureDate) && ArrivalDate.Equals(other.ArrivalDate) && DepartureTime.Equals(other.DepartureTime) && ArrivalTime.Equals(other.ArrivalTime) && Price == other.Price;
         }
 
-        public override bool Equals([CanBeNull] object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
