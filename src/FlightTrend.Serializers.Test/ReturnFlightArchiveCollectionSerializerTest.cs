@@ -27,7 +27,7 @@ namespace FlightTrend.Serializers.Test
 
             var deserialized = _sut.Deserialize(serialized);
 
-            deserialized.ShouldAllBeEquivalentTo(expected);
+            deserialized.Should().AllBeEquivalentTo(expected);
         }
     }
 }
