@@ -1,6 +1,6 @@
-using System;
 using JetBrains.Annotations;
 using NodaTime;
+using System;
 
 namespace FlightTrend.Core.Models
 {
@@ -10,6 +10,7 @@ namespace FlightTrend.Core.Models
             string company,
             string from,
             string to,
+            LocalDate requestedDate,
             LocalDate departureDate,
             LocalTime departureTime,
             LocalDate arrivalDate,
@@ -19,6 +20,7 @@ namespace FlightTrend.Core.Models
             Company = company;
             From = from;
             To = to;
+            RequestedDate = requestedDate;
             DepartureDate = departureDate;
             ArrivalDate = arrivalDate;
             DepartureTime = departureTime;
@@ -29,6 +31,7 @@ namespace FlightTrend.Core.Models
         public string Company { get; }
         public string From { get; }
         public string To { get; }
+        public LocalDate RequestedDate { get; }
         public LocalDate DepartureDate { get; }
         public LocalDate ArrivalDate { get; }
         public LocalTime DepartureTime { get; }
@@ -40,7 +43,7 @@ namespace FlightTrend.Core.Models
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            return string.Equals(Company, other.Company) && string.Equals(From, other.From) && string.Equals(To, other.To) && DepartureDate.Equals(other.DepartureDate) && ArrivalDate.Equals(other.ArrivalDate) && DepartureTime.Equals(other.DepartureTime) && ArrivalTime.Equals(other.ArrivalTime) && Price == other.Price;
+            return string.Equals(Company, other.Company) && string.Equals(From, other.From) && string.Equals(To, other.To) && RequestedDate.Equals(other.RequestedDate) && DepartureDate.Equals(other.DepartureDate) && ArrivalDate.Equals(other.ArrivalDate) && DepartureTime.Equals(other.DepartureTime) && ArrivalTime.Equals(other.ArrivalTime) && Price.Equals(other.Price);
         }
 
         public override bool Equals(object obj)
@@ -58,6 +61,7 @@ namespace FlightTrend.Core.Models
                 var hashCode = (Company != null ? Company.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (From != null ? From.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (To != null ? To.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ RequestedDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ DepartureDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ ArrivalDate.GetHashCode();
                 hashCode = (hashCode * 397) ^ DepartureTime.GetHashCode();

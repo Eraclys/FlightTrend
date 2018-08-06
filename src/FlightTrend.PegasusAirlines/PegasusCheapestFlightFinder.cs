@@ -19,16 +19,21 @@ namespace FlightTrend.PegasusAirlines
         [ItemCanBeNull]
         public async Task<ReturnFlight> FindCheapestReturnFlight(FindCheapestReturnFlightCriteria criteria)
         {
-            var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
-            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(_httpClient, parameters).ConfigureAwait(true);
-            var results = PegasusApiUtils.ParseReturnFlightResults(response, criteria.FromAirport, criteria.ToAirport).ToList();
+            var request = PegasusApiUtils.GetReturnFlightRequest(criteria);
+            var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(_httpClient, request).ConfigureAwait(true);
+            var results = PegasusApiUtils.ParseReturnFlightResults(
+                response, 
+                criteria.FromAirport, 
+                criteria.ToAirport,
+                criteria.DepartureDate,
+                criteria.ReturnDate).ToList();
 
             var departureFlight = results
-                .Where(x => x.DepartureDate == criteria.DepartureDate && criteria.DepartureFlightsFilter.IsSatisfiedBy(x))
+                .Where(x => x.From == criteria.FromAirport && criteria.DepartureFlightsFilter.IsSatisfiedBy(x))
                 .GetCheapestFlight();
 
             var returnFlight = results
-                .Where(x => x.DepartureDate == criteria.ReturnDate && criteria.ReturnFlightsFilter.IsSatisfiedBy(x))
+                .Where(x => x.To == criteria.FromAirport && criteria.ReturnFlightsFilter.IsSatisfiedBy(x))
                 .GetCheapestFlight();
 
             if (departureFlight != null && returnFlight != null)

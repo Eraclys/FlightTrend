@@ -1,5 +1,4 @@
 ﻿using FlightTrend.Core.Serialization;
-using System.Globalization;
 using JetBrains.Annotations;
 
 namespace FlightTrend.Serializers
@@ -9,7 +8,7 @@ namespace FlightTrend.Serializers
         [NotNull]
         public string Serialize(float value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.ToString("##.##");
         }
 
         public float Deserialize(string value)

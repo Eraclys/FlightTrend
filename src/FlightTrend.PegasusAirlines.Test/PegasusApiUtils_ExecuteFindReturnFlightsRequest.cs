@@ -22,12 +22,12 @@ namespace FlightTrend.PegasusAirlines.Test
                 .Returning(TwoWeeksFromNow)
                 .Build();
 
-            var parameters = PegasusApiUtils.GetReturnFlightParameters(criteria);
+            var parameters = PegasusApiUtils.GetReturnFlightRequest(criteria);
             var httpClient = PegasusApiUtils.CreateHttpClient();
 
             var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(httpClient, parameters);
 
-            response.Should().NotBeNullOrWhiteSpace();
+            response.Should().NotBeNull();
         }
 
         private static LocalDate TwoWeeksFromNow => LocalDate.FromDateTime(DateTime.UtcNow.Date.AddDays(7));

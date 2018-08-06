@@ -1,9 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using FlightTrend.Core.Models;
 using JetBrains.Annotations;
 using NodaTime;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FlightTrend.Serializers.Test
 {
@@ -35,7 +35,16 @@ namespace FlightTrend.Serializers.Test
         [NotNull]
         public static Flight GenerateFlight()
         {
-            return new Flight(RandomString(), RandomString(), RandomString(), RandomDate(), RandomTime(), RandomDate(), RandomTime(), (float)Random.NextDouble());
+            return new Flight(
+                RandomString(), 
+                RandomString(), 
+                RandomString(),
+                RandomDate(),
+                RandomDate(),
+                RandomTime(), 
+                RandomDate(), 
+                RandomTime(), 
+                (float)Math.Round(Random.NextDouble(), 2));
         }
 
         public static LocalTime RandomTime()

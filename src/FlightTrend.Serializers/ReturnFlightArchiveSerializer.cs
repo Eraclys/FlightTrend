@@ -1,10 +1,10 @@
-﻿using System;
-using FlightTrend.Core.Models;
+﻿using FlightTrend.Core.Models;
 using FlightTrend.Core.Serialization;
+using JetBrains.Annotations;
 using NodaTime;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 
 namespace FlightTrend.Serializers
 {
@@ -55,8 +55,8 @@ namespace FlightTrend.Serializers
             return new ReturnFlightArchive(
                 _instantSerializer.Deserialize(values[0]),
                 new ReturnFlight(
-                    DeserializeFlight(values.Skip(1).Take(8).ToArray()),
-                    DeserializeFlight(values.Skip(9).Take(8).ToArray())));
+                    DeserializeFlight(values.Skip(1).Take(9).ToArray()),
+                    DeserializeFlight(values.Skip(10).Take(9).ToArray())));
         }
 
         [NotNull]
@@ -67,10 +67,11 @@ namespace FlightTrend.Serializers
                 values[1],
                 values[2],
                 _dateSerializer.Deserialize(values[3]),
-                _timeSerializer.Deserialize(values[4]),
-                _dateSerializer.Deserialize(values[5]),
-                _timeSerializer.Deserialize(values[6]),
-                _floatSerializer.Deserialize(values[7]));
+                _dateSerializer.Deserialize(values[4]),
+                _timeSerializer.Deserialize(values[5]),
+                _dateSerializer.Deserialize(values[6]),
+                _timeSerializer.Deserialize(values[7]),
+                _floatSerializer.Deserialize(values[8]));
         }
 
         [NotNull]
@@ -81,6 +82,7 @@ namespace FlightTrend.Serializers
                 flight.Company,
                 flight.From,
                 flight.To,
+                _dateSerializer.Serialize(flight.RequestedDate),
                 _dateSerializer.Serialize(flight.DepartureDate),
                 _timeSerializer.Serialize(flight.DepartureTime),
                 _dateSerializer.Serialize(flight.ArrivalDate),

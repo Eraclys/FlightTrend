@@ -4,7 +4,6 @@ using JetBrains.Annotations;
 using NodaTime;
 using System.Collections.Generic;
 using System.Linq;
-using FlightTrend.Core.Models;
 
 namespace FlightTrend.Queries
 {
@@ -13,11 +12,12 @@ namespace FlightTrend.Queries
         [NotNull]
         public static FindCheapestReturnFlightsForMultipleTravelDatesCriteria DefaultCriteria()
         {
-            var departureFlightSpecification = new OrSpecification<Flight>(new DepartureTimeIsAfter(
-                new LocalTime(20, 00)),
-                new DepartureTimeIsBefore(new LocalTime(1,0)));
+            var sameDayEvening = new DepartureDateIsExact().And(new DepartureTimeIsAfter(new LocalTime(20, 00)));
+            var nextDayEarlyMorning = new DepartureDateIsNextDay().And(new DepartureTimeIsBefore(new LocalTime(2, 0)));
 
-            var returnFlightSpecification = new DepartureTimeIsAfter(new LocalTime(21, 00));
+            var departureFlightSpecification = sameDayEvening.Or(nextDayEarlyMorning);
+
+            var returnFlightSpecification = new DepartureDateIsExact().And(new DepartureTimeIsAfter(new LocalTime(21, 00)));
 
             return FindCheapestReturnFlightsForMultipleTravelDatesCriteriaBuilder.New()
                 .From("STN")

@@ -1,106 +1,117 @@
 using FlightTrend.Core.FlightFinders;
+using FlightTrend.Core.Models;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NodaTime;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Threading.Tasks;
-using FlightTrend.Core.Models;
-using JetBrains.Annotations;
 
 namespace FlightTrend.PegasusAirlines
 {
     public static class PegasusApiUtils
     {
-        private const string FindPricesUrl = "https://book.flypgs.com/Common/MemberRezvResults.jsp?activeLanguage=EN HTTP/1.1";
-
-        private static readonly Regex PricesRegex = new Regex(
-            @"'-1#\s+([^#]+)(?:(?!fltDateDep).)*[^']+'([^']+)'(?:(?!fltDateArr).)*[^']+'([^']+)'(?:(?!fltTimeDep).)*[^']+'([^']+)'(?:(?!fltTimeArr).)*[^']+'([^']+)'",
-            RegexOptions.Compiled | RegexOptions.Multiline);
-
+        private const string FindPricesUrl = "https://web.flypgs.com/pegasus/availability";
+        
         [NotNull]
-        public static IEnumerable<Flight> ParseReturnFlightResults(string response, string from, string to)
+        public static IEnumerable<Flight> ParseReturnFlightResults(
+            PegasusApiFlightSearchResponse response, 
+            string from, 
+            string to, 
+            LocalDate requestedDepartureDate,
+            LocalDate requestedReturnDate)
         {
-            var prices = new List<Flight>();
-
-            foreach (Match match in PricesRegex.Matches(response))
-            {
-                var departureDate = match.Groups[2].Value;
-                var arrivalDate = match.Groups[3].Value;
-                var departureTime = match.Groups[4].Value;
-                var arrivalTime = match.Groups[5].Value;
-                var amount = match.Groups[1].Value;
-
-                prices.Add(new Flight(
+            var departures = response.DepartureRouteList
+                .SelectMany(x => x.DailyFlightList)
+                .SelectMany(x => x.FlightList)
+                .Select(x => new Flight(
                     "Pegasus",
                     from,
                     to,
-                    PegasusDateToLocalDate(departureDate),
-                    PegasusTimeToLocalTime(departureTime),
-                    PegasusDateToLocalDate(arrivalDate),
-                    PegasusTimeToLocalTime(arrivalTime),
-                    float.Parse(amount)));
-            }
+                    requestedDepartureDate,
+                    LocalDate.FromDateTime(x.DepartureDateTime),
+                    PegasusTimeToLocalTime(x.DepartureDateTime.TimeOfDay),
+                    LocalDate.FromDateTime(x.ArrivalDateTime),
+                    PegasusTimeToLocalTime(x.ArrivalDateTime.TimeOfDay),
+                    (float)x.Fare.TotalFare.Amount));
 
-            return prices.Distinct();
+            var returns = response.ReturnRoute.DailyFlightList
+                .SelectMany(x => x.FlightList)
+                .Select(x => new Flight(
+                    "Pegasus",
+                    to,
+                    from,
+                    requestedReturnDate,
+                    LocalDate.FromDateTime(x.DepartureDateTime),
+                    PegasusTimeToLocalTime(x.DepartureDateTime.TimeOfDay),
+                    LocalDate.FromDateTime(x.ArrivalDateTime),
+                    PegasusTimeToLocalTime(x.ArrivalDateTime.TimeOfDay),
+                    (float)x.Fare.TotalFare.Amount));
+            
+
+            return departures.Union(returns).Distinct();
         }
 
         [NotNull]
-        public static IEnumerable<KeyValuePair<string, string>> GetReturnFlightParameters(FindCheapestReturnFlightCriteria criteria)
+        public static PegasusApiFlightSearchRequest GetReturnFlightRequest(FindCheapestReturnFlightCriteria criteria)
         {
-            return new Dictionary<string, string>
+            return new PegasusApiFlightSearchRequest
             {
-                {"DEPPORT", criteria.FromAirport},
-                {"ARRPORT", criteria.ToAirport},
-                {"LBLDEPPORT", ""},
-                {"LBLARRPORT", ""},
-                {"TRIPTYPE", "R"},
-                {"DEPDATE", criteria.DepartureDate.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
-                {"RETDATE", criteria.ReturnDate.ToDateTimeUnspecified().ToString("dd/MM/yyyy")},
-                {"ADULT", "1"},
-                {"CHILD", "0"},
-                {"INFANT", "0"},
-                {"STUDENT", "0"},
-                {"SOLDIER", "0"},
-                {"CURRENCY", "GBP"},
-                {"LC", "EN"},
-                {"FLEX", ""},
-                {"userId", ""},
-                {"resetErrors", "T"},
-                {"clickedButton", "btnSearch"},
-                {"DEPDATEO", ""},
-                {"RETDATEO", ""}
+
+                Affiliate = new PegasusApiFlightSearchRequest.AffiliateContent(),
+                FfRedemption = false,
+                AdultCount = 1,
+                ChildCount = 0,
+                InfantCount = 0,
+                SoldierCount = 0,
+                Currency = "GBP",
+                DateOption = 1,
+                OpenFlightSearch = false,
+                PersonnelFlightSearch = false,
+                OperationCode = "TK",
+                FlightSearchList = new List<PegasusApiFlightSearchRequest.FlightSearchItem>
+                {
+                    new PegasusApiFlightSearchRequest.FlightSearchItem
+                    {
+                        DeparturePort = criteria.FromAirport,
+                        ArrivalPort = criteria.ToAirport,
+                        DepartureDate = criteria.DepartureDate.ToDateTimeUnspecified().ToString("yyyy-MM-dd"),
+                        ReturnDate = criteria.ReturnDate.ToDateTimeUnspecified().ToString("yyyy-MM-dd")
+                    }
+                }
             };
         }
 
-        public static async Task<string> ExecuteFindReturnFlightsRequest([NotNull] HttpClient httpClient, IEnumerable<KeyValuePair<string,string>> parameters)
+        public static async Task<PegasusApiFlightSearchResponse> ExecuteFindReturnFlightsRequest([NotNull] HttpClient httpClient, PegasusApiFlightSearchRequest request)
         {
-            var httpResponseMessage = await httpClient.PostAsync(FindPricesUrl, new FormUrlEncodedContent(parameters));
-            var response = await httpResponseMessage.Content.ReadAsStringAsync();
+            var jsonRequest = JsonConvert.SerializeObject(request, Formatting.None, new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            });
+
+            var stringContent = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+            var httpResponseMessage = await httpClient.PostAsync(FindPricesUrl, stringContent).ConfigureAwait(false);
+            var response = await httpResponseMessage.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
                 throw new Exception(response);
             }
 
-            return response;
+            return JsonConvert.DeserializeObject<PegasusApiFlightSearchResponse>(response);
         }
 
-        public static LocalDate PegasusDateToLocalDate(string date)
+        public static LocalTime PegasusTimeToLocalTime(TimeSpan time)
         {
-            return LocalDate.FromDateTime(DateTime.ParseExact(date, "dd.MM.yyyy", CultureInfo.InvariantCulture));
-        }
-
-        public static LocalTime PegasusTimeToLocalTime(string time)
-        {
-            var timeSpan = TimeSpan.Parse(time);
-
             return LocalTime.FromHourMinuteSecondMillisecondTick(
-                timeSpan.Hours,
-                timeSpan.Minutes,
+                time.Hours,
+                time.Minutes,
                 0,
                 0,
                 0);
@@ -116,13 +127,15 @@ namespace FlightTrend.PegasusAirlines
 
             var httpClient = new HttpClient(handler);
 
-            httpClient.DefaultRequestHeaders.Host = "book.flypgs.com";
-            httpClient.DefaultRequestHeaders.Add("Origin", "https://www.flypgs.com");
+            httpClient.DefaultRequestHeaders.Host = "web.flypgs.com";
+            httpClient.DefaultRequestHeaders.Add("Origin", "https://web.flypgs.com");
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36");
-            httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-            httpClient.DefaultRequestHeaders.Add("Referer", "https://www.flypgs.com/en");
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json, text/plain, */*");
+            httpClient.DefaultRequestHeaders.Add("Referer", "https://web.flypgs.com");
             httpClient.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate, br");
-            httpClient.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en-US;q=0.9,en;q=0.8,fr;q=0.7,tr;q=0.6,zh-CN;q=0.5,zh;q=0.4");
+            httpClient.DefaultRequestHeaders.Add("Accept-Language", "en");
+            httpClient.DefaultRequestHeaders.Add("X-VERSION", "1.0.4");
+            httpClient.DefaultRequestHeaders.Add("X-PLATFORM", "web");
 
             return httpClient;
         }
