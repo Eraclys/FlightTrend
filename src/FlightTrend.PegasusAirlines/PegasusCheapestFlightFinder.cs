@@ -1,4 +1,5 @@
-﻿using FlightTrend.Core.FlightFinders;
+﻿using System;
+using FlightTrend.Core.FlightFinders;
 using FlightTrend.Core.Models;
 using JetBrains.Annotations;
 using System.Linq;
@@ -20,10 +21,12 @@ namespace FlightTrend.PegasusAirlines
         public async Task<ReturnFlight> FindCheapestReturnFlight(FindCheapestReturnFlightCriteria criteria)
         {
             var request = PegasusApiUtils.GetReturnFlightRequest(criteria);
+
             var response = await PegasusApiUtils.ExecuteFindReturnFlightsRequest(_httpClient, request).ConfigureAwait(true);
+
             var results = PegasusApiUtils.ParseReturnFlightResults(
-                response, 
-                criteria.FromAirport, 
+                response,
+                criteria.FromAirport,
                 criteria.ToAirport,
                 criteria.DepartureDate,
                 criteria.ReturnDate).ToList();

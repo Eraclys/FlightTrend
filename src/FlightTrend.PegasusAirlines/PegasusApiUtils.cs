@@ -17,18 +17,19 @@ namespace FlightTrend.PegasusAirlines
     public static class PegasusApiUtils
     {
         private const string FindPricesUrl = "https://web.flypgs.com/pegasus/availability";
-        
+
         [NotNull]
         public static IEnumerable<Flight> ParseReturnFlightResults(
-            PegasusApiFlightSearchResponse response, 
-            string from, 
-            string to, 
+            PegasusApiFlightSearchResponse response,
+            string from,
+            string to,
             LocalDate requestedDepartureDate,
             LocalDate requestedReturnDate)
         {
-            var departures = response.DepartureRouteList
-                .SelectMany(x => x.DailyFlightList)
-                .SelectMany(x => x.FlightList)
+            var departures = (response?.DepartureRouteList ?? Enumerable.Empty<DepartureRouteList>())
+                .SelectMany(x => x.DailyFlightList ?? Enumerable.Empty<DailyFlightList>())
+                .SelectMany(x => x.FlightList ?? Enumerable.Empty<FlightList>())
+                .Where(x => x?.Fare?.TotalFare?.Amount != null)
                 .Select(x => new Flight(
                     "Pegasus",
                     from,
@@ -40,8 +41,9 @@ namespace FlightTrend.PegasusAirlines
                     PegasusTimeToLocalTime(x.ArrivalDateTime.TimeOfDay),
                     (float)x.Fare.TotalFare.Amount));
 
-            var returns = response.ReturnRoute.DailyFlightList
-                .SelectMany(x => x.FlightList)
+            var returns = (response?.ReturnRoute?.DailyFlightList ?? Enumerable.Empty<DailyFlightList>())
+                .SelectMany(x => x.FlightList ?? Enumerable.Empty<FlightList>())
+                .Where(x => x?.Fare?.TotalFare?.Amount != null)
                 .Select(x => new Flight(
                     "Pegasus",
                     to,
@@ -52,7 +54,6 @@ namespace FlightTrend.PegasusAirlines
                     LocalDate.FromDateTime(x.ArrivalDateTime),
                     PegasusTimeToLocalTime(x.ArrivalDateTime.TimeOfDay),
                     (float)x.Fare.TotalFare.Amount));
-            
 
             return departures.Union(returns).Distinct();
         }

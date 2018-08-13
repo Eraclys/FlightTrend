@@ -20,7 +20,7 @@ namespace FlightTrend.Core.FlightFinders
         {
             var tasks = _innerFinders.Select(x => x.FindCheapestReturnFlight(criteria));
 
-            var results = await Task.WhenAll(tasks);
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return results.GetCheapestReturnFlight();
         }

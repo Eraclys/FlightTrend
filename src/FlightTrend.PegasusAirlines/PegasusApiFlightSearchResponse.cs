@@ -33,12 +33,12 @@ namespace FlightTrend.PegasusAirlines
     {
         public List<DailyFlightList> DailyFlightList { get; set; }
     }
-    
+
     public class ReturnRoute
     {
         public List<DailyFlightList> DailyFlightList { get; set; }
     }
-    
+
     public class PegasusApiFlightSearchResponse
     {
         public List<DepartureRouteList> DepartureRouteList { get; set; }

@@ -36,14 +36,14 @@ namespace FlightTrend.Serializers.Test
         public static Flight GenerateFlight()
         {
             return new Flight(
-                RandomString(), 
-                RandomString(), 
+                RandomString(),
+                RandomString(),
                 RandomString(),
                 RandomDate(),
                 RandomDate(),
-                RandomTime(), 
-                RandomDate(), 
-                RandomTime(), 
+                RandomTime(),
+                RandomDate(),
+                RandomTime(),
                 (float)Math.Round(Random.NextDouble(), 2));
         }
 
